@@ -1,0 +1,21 @@
+﻿<Page x:Class="Nesdesign.Clients"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Nesdesign"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Klienci">
+
+    <Grid Background="AliceBlue">
+        <Label Content="Klienci" HorizontalAlignment="Left" Margin="301,101,0,0" VerticalAlignment="Top"/>
+        <DataGrid x:Name="ClientsDataView" ItemsSource="{Binding Clients}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="NIP"  Width="Auto" Binding="{Binding NIP}"/>
+                <DataGridTextColumn Header="Nazwa"  Width="Auto" Binding="{Binding nazwa}"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>
