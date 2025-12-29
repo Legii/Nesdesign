@@ -9,13 +9,29 @@
       Title="Klienci">
 
     <Grid Background="AliceBlue">
-        <Label Content="Klienci" HorizontalAlignment="Left" Margin="301,101,0,0" VerticalAlignment="Top"/>
-        <DataGrid x:Name="ClientsDataView" ItemsSource="{Binding Clients}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="NIP"  Width="Auto" Binding="{Binding NIP}"/>
-                <DataGridTextColumn Header="Nazwa"  Width="Auto" Binding="{Binding nazwa}"/>
-
-            </DataGrid.Columns>
-        </DataGrid>
+        <StackPanel>
+            <Label Content="Klienci" FontSize="16" FontWeight="Bold" Margin="0,0,0,8"/>
+            <DataGrid x:Name="ClientsDataView"
+                      ItemsSource="{Binding Clients}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="True"
+                      CanUserDeleteRows="True"
+                      CanUserSortColumns="True"
+                      SelectionMode="Single"
+                      IsReadOnly="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding clientId}" IsReadOnly="True" Width="70"/>
+                    <DataGridTextColumn Header="Nazwa"
+                                        Binding="{Binding nazwa, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="2*"/>
+                    <DataGridTextColumn Header="NIP"
+                                        Binding="{Binding NIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Opis"
+                                        Binding="{Binding opis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="3*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
     </Grid>
 </Page>

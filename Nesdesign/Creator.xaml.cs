@@ -1,6 +1,7 @@
 ﻿using Nesdesign.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -31,10 +32,57 @@ namespace Nesdesign
             DataContext = _viewModel;
         }
 
-        private void CreateOfferClick(object sender, RoutedEventArgs e)
+        private void CreatorCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string projectName = CreateOfferId(2025,8);
-            FileOperationStatus status = FileHandler.CreateDir(projectName);
+
+            if(MonthYearPanel != null)
+                if (CreatorCombobox.SelectedIndex == 2)
+                    MonthYearPanel.Visibility = Visibility.Visible;
+                else
+                    MonthYearPanel.Visibility = Visibility.Collapsed;
+        }
+
+    
+
+        private void CreateOfferClick(object sender, RoutedEventArgs e)
+           
+        {
+            string projectName = CreateOfferId(2025,1);
+            int selectedIndex = CreatorCombobox.SelectedIndex;
+            switch(selectedIndex)
+            {
+
+                case 0:
+                    if (_viewModel.LatestOfferId != "N0000000")
+                    {
+                        string t = _viewModel.LatestOfferId.Substring(3, 4);
+                        projectName = CreateOfferId(t);
+                    } else
+                    {
+                        DateTime now_ = DateTime.Now;
+                        projectName = CreateOfferId(now_.Year, now_.Month);
+                    }
+
+                        break;
+
+                case 1: 
+                    DateTime now = DateTime.Now;
+                    projectName = CreateOfferId(now.Year, now.Month);
+                 break;
+
+                case 2:
+                    int year = Int16.Parse(this.YearTextBox.Text);
+                    int month = SelectMonth.SelectedIndex +1;
+                    projectName = CreateOfferId(year, month);
+                    //int year = int.Parse(YearTextBox.Text);
+                    //int month = int.Parse(MonthTextBox.Text);
+                    projectName = CreateOfferId(year, month);
+                    break;
+
+            }
+            
+  
+            FileOperationStatus status = FileHandler.CreateDir(projectName, DIR_TYPE.Offer);
             switch (status) {
                 case FileOperationStatus.Success:
                     MessageLabel.Content = "Utworzono pomyślnie projekt: " + projectName;
@@ -47,15 +95,19 @@ namespace Nesdesign
                     break;
 
             }
-            _viewModel.Offers.Add(new Offer(projectName, "","",1,"",0));
+
+            _viewModel.Offers.Add(new Offer(projectName, ImageCache.LOGO,"",1,"",0));
+            
 
         }
 
         private void CreateProjectClick(object sender, RoutedEventArgs e)
         {
-            string projectName = _viewModel.Selected;
-            projectName = "P" + projectName.Substring(1);
-            FileOperationStatus status = FileHandler.CreateDir(projectName, true);
+            int ind = ProjectTypeComboBox.SelectedIndex;
+            Offer selectedOffer = _viewModel.SelectedItem as Offer;
+            selectedOffer.setProject(Convert.ToBoolean(ind));
+            string projectName = selectedOffer.projectPath;
+            FileOperationStatus status = FileHandler.CreateDir(projectName, DIR_TYPE.Project);
             switch (status)
             {
                 case FileOperationStatus.Success:
@@ -70,7 +122,6 @@ namespace Nesdesign
 
             }
 
-            _viewModel.SelectedProject = projectName;
 
         }
 
@@ -92,7 +143,7 @@ namespace Nesdesign
         public string CreateOfferId(string suffix)
         {
             string n = "N";
-            string nr = CreateOfferId(suffix).ToString();
+            string nr = string.Format("{0:00}", getCount(suffix) + 1);
 
             n += nr + suffix;
             return n;
@@ -105,10 +156,7 @@ namespace Nesdesign
             year_ = year_.Substring(year_.Length - 2);
             string suffix = month_ + year_;
 
-            string nr = (getCount(suffix) + 1).ToString("00");
-
-            n += nr + month_ + year_;
-            return n;
+            return CreateOfferId(suffix);
         }
            
 
@@ -118,17 +166,36 @@ namespace Nesdesign
 
         private void OpenOfferFolderClick(object sender, RoutedEventArgs e)
         {
-            FileHandler.OpenFolder(_viewModel.LatestOfferId);
+            FileHandler.OpenFolder(_viewModel.SelectedOfferId);
         }
 
         private void OpenProjectFolderClick(object sender, RoutedEventArgs e)
         {
-            FileHandler.OpenFolder(_viewModel.SelectedProject, true);
+            FileHandler.OpenFolder(_viewModel.SelectedItem.projectPath, DIR_TYPE.Project);
         }
 
         private void CopyStructureClick(object sender, RoutedEventArgs e)
         {
-            FileOperationStatus status = FileHandler.CopyTemplate(_viewModel.LatestOfferId + "//");
+            Offer offer = _viewModel.SelectedItem as Offer;
+            Button btn = sender as Button;
+            string tag = btn.Tag.ToString();
+            string dirname;
+            DIR_TYPE dir_type;
+            if(tag == "offer")
+            {
+                dirname = offer.offerId;
+                dir_type = DIR_TYPE.Offer;
+            }
+            else
+            {
+                dirname = offer.projectPath;
+                dir_type = DIR_TYPE.Project;
+            }
+       
+   
+            
+
+            FileOperationStatus status = FileHandler.CopyTemplate(dirname, dir_type);
             switch (status)
             {
                 case FileOperationStatus.Success:
@@ -139,6 +206,8 @@ namespace Nesdesign
                     break;
             }
             }
+
+
 
         private void Filter(OfferStatus status)
         {
@@ -185,6 +254,7 @@ namespace Nesdesign
                 mainWindow.NavigateToOffersPage();
             }
         }
+
 
 
     }

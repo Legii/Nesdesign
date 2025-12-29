@@ -20,20 +20,99 @@
             <Button Content="GOTOWE" Width="150" HorizontalAlignment="Left" Margin="41,590,0,0" VerticalAlignment="Top" Click="ReadyFilterClick" RenderTransformOrigin="0.604,3.006"/>
             <Button Content="ZAKOŃCZONE" Width ="150" HorizontalAlignment="Left" Margin="41,635,0,0" VerticalAlignment="Top" Click="FinishedFilterClick" RenderTransformOrigin="0.527,-0.875"/>
             <Button Content="WSZYSTKIE" Width ="150" HorizontalAlignment="Left" Margin="41,680,0,0" VerticalAlignment="Top" Click="ClearFilterClick" RenderTransformOrigin="0.527,-0.875"/>
-            <Image HorizontalAlignment="Left" Height="150" Margin="41,18,0,0" VerticalAlignment="Top" Width="150" Source="/nesdesign_sp_z_o_o_logo.jpg" RenderTransformOrigin="0.136,0.586"/>
+            <Image HorizontalAlignment="Left" Height="150" Margin="41,18,0,0" VerticalAlignment="Top" Width="150" RenderTransformOrigin="0.136,0.586" Source="/nesdesign_sp_z_o_o_logo.jpg"/>
         </Grid>
-        <Grid Background="AliceBlue" Margin="225,0,0,0">
-            <Button Content="NOWE ZAPYTANIE" HorizontalAlignment="Left" Style="{StaticResource VeryBigButton}" Margin="234,274,0,0" VerticalAlignment="Top" Click="CreateOfferClick" />
-            <Button Content="Kopiuj strukturę" HorizontalAlignment="Left"  Margin="234,357,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.527,2.004" Click="CopyStructureClick" Style="{StaticResource PrimaryButtonStyle}"/>
-            <Button Content="Otwórz folder" HorizontalAlignment="Left"  Margin="394,357,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.527,2.004" Click="OpenOfferFolderClick" Style="{StaticResource PrimaryButtonStyle}"/>
-            <Label x:Name="MessageLabel" Content="" HorizontalAlignment="Left" Margin="234,405,0,0" VerticalAlignment="Top" Width="335"/>
-            <Label x:Name="LabelLastOffer" Content="{Binding LatestOfferId}" HorizontalAlignment="Left" Margin="26,26,0,0" VerticalAlignment="Top" FontSize="22"/>
-            <Button Content="NOWY PROJEKT" HorizontalAlignment="Left" Style="{StaticResource VeryBigButton}" Margin="228,523,0,0" VerticalAlignment="Top" Click="CreateProjectClick"/>
-            <Button Content="Kopiuj strukturę" HorizontalAlignment="Left"  Margin="228,607,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.527,2.004" Click="CopyStructureClick" Style="{StaticResource PrimaryButtonStyle}"/>
-            <Button Content="Otwórz folder" HorizontalAlignment="Left"  Margin="388,607,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.527,2.004" Click="OpenProjectFolderClick" Style="{StaticResource PrimaryButtonStyle}"/>
-            <Label x:Name="MessageLabel2" Content="" HorizontalAlignment="Left" Margin="234,655,0,0" VerticalAlignment="Top" Width="334"/>
 
-        </Grid>
+        <!-- Używamy Border z Padding zamiast Padding na Grid -->
+        <Border Background="AliceBlue" Margin="225,0,0,0" Padding="24">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="350"/>
+                    <!-- Kolumna przycisków -->
+                    <ColumnDefinition Width="24"/>
+                    <!-- odstęp -->
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!-- Kolumna z danymi -->
+           
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>  <!-- LabelLastOffer -->
+                    <RowDefinition Height="24"/>    <!-- odstęp -->
+                    <RowDefinition Height="Auto"/>  <!-- CreatorCombobox -->
+                    <RowDefinition Height="8"/>     <!-- odstęp -->
+                    <RowDefinition Height="Auto"/>  <!-- MonthYearPanel (SelectMonth) -->
+                    <RowDefinition Height="30"/>    <!-- odstęp -->
+                    <RowDefinition Height="Auto"/>  <!-- NOWE ZAPYTANIE -->
+                    <RowDefinition Height="12"/>    <!-- odstęp -->
+                    <RowDefinition Height="Auto"/>  <!-- Kopiuj / Otwórz (oferta) -->
+                    <RowDefinition Height="Auto"/>  <!-- MessageLabel -->
+                    <RowDefinition Height="24"/>    <!-- odstęp -->
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="30"/>
+                    <!-- odstęp -->
+                    <RowDefinition Height="Auto"/>  <!-- NOWY PROJEKT -->
+                    <RowDefinition Height="Auto"/>  <!-- Kopiuj / Otwórz (projekt) -->
+                    <RowDefinition Height="Auto"/>  <!-- MessageLabel2 -->
+                    <RowDefinition Height="*"/>     <!-- filler -->
+                </Grid.RowDefinitions>
+
+                <Label x:Name="LabelLastOffer" Content="{Binding SelectedOfferId}" Grid.Row="0" HorizontalAlignment="Left" FontSize="22"/>
+
+                <ComboBox Grid.Row="2" HorizontalAlignment="Left" Width="300" x:Name="CreatorCombobox" SelectionChanged="CreatorCombobox_SelectionChanged">
+                    <ComboBoxItem Content="Numeracja wg. ostatniej oferty" IsSelected="True"/>
+                    <ComboBoxItem Content="Numeracja wg. aktualnego miesiąca"/>
+                    <ComboBoxItem Content="Ręczna numeracja"/>
+                </ComboBox>
+
+                <!-- mały ComboBox ustawiony w tym samym "kolumnowym" lewym wyrównaniu co przyciski -->
+                <StackPanel x:Name="MonthYearPanel" Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Left" Visibility="Collapsed">
+                    <ComboBox Width="161" Height="20" x:Name="SelectMonth">
+                        <ComboBoxItem Content="Styczeń (01)" IsSelected="True"/>
+                        <ComboBoxItem Content="Luty (02)"/>
+                        <ComboBoxItem Content="Marzec (03)"/>
+                        <ComboBoxItem Content="Kwiecień (04)"/>
+                        <ComboBoxItem Content="Maj (05)"/>
+                        <ComboBoxItem Content="Czerwiec (06)"/>
+                        <ComboBoxItem Content="Lipiec (07)"/>
+                        <ComboBoxItem Content="Sierpień (08)"/>
+                        <ComboBoxItem Content="Wrzesień (09)"/>
+                        <ComboBoxItem Content="Październik (10)"/>
+                        <ComboBoxItem Content="Listopad (11)"/>
+                        <ComboBoxItem Content="Grudzień (12)"/>
+                    </ComboBox>
+
+                    <TextBox Width="130" Height="20" Margin="10,0,0,0" x:Name="YearTextBox" Text="2025"/>
+                </StackPanel>
+
+                <Button Content="NOWE ZAPYTANIE" Grid.Row="6" HorizontalAlignment="Left" Style="{StaticResource VeryBigButton}" Click="CreateOfferClick"/>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="8" HorizontalAlignment="Left" Margin="0,6,0,0">
+                    <Button Content="Kopiuj strukturę" Click="CopyStructureClick" Tag="offer" Style="{StaticResource PrimaryButtonStyle}" Margin="0,0,10,0"/>
+                    <Button Content="Otwórz folder" Click="OpenOfferFolderClick" Style="{StaticResource PrimaryButtonStyle}" />
+                </StackPanel>
+
+                <Label x:Name="MessageLabel" Grid.Row="9" HorizontalAlignment="Left" Width="335" />
+
+                <ComboBox x:Name="ProjectTypeComboBox" Grid.Row="12" HorizontalAlignment="Left" Width="200">
+                    <ComboBoxItem Content="Produkcja"  IsSelected="True"/>
+                    <ComboBoxItem Content="Konstrukcja"/>
+
+                </ComboBox>
+                <Button Content="NOWY PROJEKT" Grid.Row="13" HorizontalAlignment="Left" Style="{StaticResource VeryBigButton}" Click="CreateProjectClick"/>
+           
+                <StackPanel Orientation="Horizontal" Grid.Row="14" HorizontalAlignment="Left" Margin="0,6,0,0">
+                    <Button Content="Kopiuj strukturę" Click="CopyStructureClick" Tag="project" Style="{StaticResource PrimaryButtonStyle}" Margin="0,0,10,0"/>
+                    <Button Content="Otwórz folder" Click="OpenProjectFolderClick" Style="{StaticResource PrimaryButtonStyle}" />
+                </StackPanel>
+
+                <Label x:Name="MessageLabel2" Grid.Row="15" HorizontalAlignment="Left" Width="334" />
+              
+            </Grid>
+            </Grid>
+
+        </Border>
+        
 
     </Grid>
 

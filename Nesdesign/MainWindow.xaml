@@ -9,10 +9,16 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        
+
+       
+
     </Window.Resources>
-    
-    
+
+
+
+
+
+
     <DockPanel>
 
         <!-- Navigation Panel -->

@@ -20,4 +20,17 @@
     <Resource Include="nesdesign_sp_z_o_o_logo.jpg" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Nowy folder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\nesdesign_sp_z_o_o_logo.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="static\nesdesign_sp_z_o_o_logo.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

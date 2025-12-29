@@ -1,35 +1,40 @@
 ﻿using Nesdesign.Models;
-using System.Text;
+using System.Collections;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Nesdesign
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         OffersViewModel offersViewModel { get; set; }
         public OffersPage offersPage { get; set; }
         public Clients clientsPage { get; set; }
         public Creator creatorPage { get; set; }
+        
+
+        public void PreloadImages(IEnumerable<string> paths)
+        {
+            foreach (var p in paths)
+                ImageCache.Get(p);
+        }
+
         public MainWindow()
         {
-
             InitializeComponent();
+            //PreloadImages(new List<string> {  });
             offersViewModel = new OffersViewModel();
             clientsPage = new Clients();
             creatorPage = new Creator(offersViewModel);
             offersPage = new OffersPage(offersViewModel);
             MainFrame.Navigate(offersPage);
+            
+            this.Loaded += MainWindow_Loaded; // uruchom inicjalizację bazy i ładowanie asynchronicznie po załadowaniu okna
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Inicjalizacja i ładowanie danych (nie blokuje UI)
+            await offersViewModel.InitializeAsync();
         }
 
         public void NavigateToOffersPage()
