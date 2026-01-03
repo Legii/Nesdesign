@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Nesdesign
 {
@@ -20,12 +21,13 @@ namespace Nesdesign
     public enum DIR_TYPE {Offer,Order,Project}
     public class FileHandler
     {
-        public static String BASE_PATH = "C:\\Nesdesign\\";
-        public static String PROJECTS_PATH = "projekty\\";
-        public static String OFFERS_PATH = "zapytania\\";
-        public static String ORDERS_PATH = "zamowienia\\";
-        public static String DIR_OFFER_TEMPLATE = "szablon_oferty\\";
-        public static String DIR_PROJECT_TEMPLATE = "szablon_projektu\\";
+        public static SettingsManager settingsManager = SettingsManager.Instance;
+        public static String BASE_PATH =>   settingsManager.GetValue("BASE_PATH");
+        public static String PROJECTS_PATH => settingsManager.GetValue("PROJECTS_PATH");
+        public static String OFFERS_PATH = settingsManager.GetValue("OFFERS_PATH") + "\\";
+        public static String ORDERS_PATH = settingsManager.GetValue("ORDERS_PATH") + "\\";
+        public static String OFFER_TEMPLATE_PATH = settingsManager.GetValue("OFFER_TEMPLATE_PATH") + "\\";
+        public static String PROJECT_TEMPLATE_PATH = settingsManager.GetValue("OFFER_TEMPLATE_PATH") + "\\" ;
 
         public static string CreateBasePath(DIR_TYPE dir_type)
         {
@@ -88,11 +90,11 @@ namespace Nesdesign
         {
             string basePath = CreateBasePath(dir_type);
 
-            string destinationPath = basePath + dirname +"//";
-            string DIR_TEMPLATE = dir_type == DIR_TYPE.Offer ? DIR_OFFER_TEMPLATE : DIR_PROJECT_TEMPLATE;
+            string destinationPath = Path.Join(basePath,dirname);
+            string DIR_TEMPLATE = dir_type == DIR_TYPE.Offer ? OFFER_TEMPLATE_PATH : PROJECT_TEMPLATE_PATH;
             try
             {
-                string sourcePath = BASE_PATH + DIR_TEMPLATE;
+                string sourcePath = Path.Join(basePath, DIR_TEMPLATE);
               
                 if (!Directory.Exists(sourcePath))
                 {
@@ -130,6 +132,7 @@ namespace Nesdesign
         {
             string dirPath = CreateBasePath(dir_type);
             string fullPath = dirPath + dirname;
+
             var psi = new ProcessStartInfo
             {
                 FileName = "explorer.exe",

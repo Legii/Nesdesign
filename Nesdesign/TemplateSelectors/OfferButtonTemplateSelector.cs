@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Nesdesign
+namespace Nesdesign.TemplateSelectors
 {
     public class OfferButtonTemplateSelector : DataTemplateSelector
     {
@@ -18,11 +18,9 @@ namespace Nesdesign
         {
             if (item is Offer offer)
             {
-                // Jeśli orderNumber jest puste → A
-                if (string.IsNullOrWhiteSpace(offer.orderNumber))
+   
+                if (string.IsNullOrWhiteSpace(offer.OrderNumber))
                     return TemplateA;
-
-                // Jeśli orderNumber ma wartość → B
                 return TemplateB;
             }
 

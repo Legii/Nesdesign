@@ -1,4 +1,5 @@
-﻿using Nesdesign.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Nesdesign.Models;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
@@ -7,9 +8,12 @@ using System.Windows.Controls;
 
 namespace Nesdesign
 {
-    public partial class OffersPage : Page
+    public partial class OffersPage : Page, INotifyPropertyChanged
     {
         OffersViewModel viewModel;
+      
+    
+
         private void addProject(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is Offer offer)
@@ -29,8 +33,8 @@ namespace Nesdesign
                 bool? result = openFileDialog.ShowDialog();
                 if (result == true)
                 {
-                   offer.loadPhoto(openFileDialog.FileName);
-                   OffersDataGrid.Items.Refresh();
+                    offer.LoadPhoto(openFileDialog.FileName);
+                    OffersDataGrid.Items.Refresh();
                 }
                 
             }
@@ -47,9 +51,22 @@ namespace Nesdesign
             InitializeComponent();
             this.DataContext = offersViewModel;
             this.viewModel = offersViewModel;
+            this.viewModel.PropertyChanged += (_, e) => { 
+                if(e.PropertyName == nameof(OffersViewModel.ShowPaymentData))
+                {
+                    Visibility visibility = viewModel.ShowPaymentData ? Visibility.Visible : Visibility.Collapsed;
+                    InvoiceColumn.Visibility = visibility;
+                    PriceColumn.Visibility = visibility;
+                }
+
+
+
+            };
 
         }
    
+
+       
 
 
         private void CreateOrderCLick(object sender, RoutedEventArgs e)
@@ -61,19 +78,18 @@ namespace Nesdesign
                 Overlay.Visibility = Visibility.Visible;
                 FormPanel.LoadOrder(offer);
                 FormPanel.SetCallback(result => OnFormResult(result));
-                
-       
-                /*
-                // MessageBoxResult result = MessageBox.Show($"Kliknięto A dla oferty: {offer.offerId}");
-
-                string orderNumber = StringHandler.RandomString(10);
-                    offer.orderNumber = orderNumber;
-                    FileHandler.CreateDir(orderNumber, DIR_TYPE.Order);
-                    OffersDataGrid.Items.Refresh();*/
-
-
+               
                 
             }
+        }
+        private void RightClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox txt)
+                Clipboard.SetText(txt?.Text?.ToString() ?? "");
+            else if (sender is Button btn)
+                Clipboard.SetText(btn.Content.ToString());
+            else if (sender is DataGridCell cell && cell.Content is TextBlock tb)
+                Clipboard.SetText(tb.Text.ToString());
         }
 
         private void OnFormResult(Offer? offer)
@@ -88,7 +104,7 @@ namespace Nesdesign
 
             OffersDataGrid.Items.Refresh();
 
-            FileHandler.CreateDir(offer.orderPath, DIR_TYPE.Order);
+            FileHandler.CreateDir(offer.OrderPath, DIR_TYPE.Order);
             
             
    
@@ -99,14 +115,24 @@ namespace Nesdesign
         {
             if (sender is Button btn && btn.DataContext is Offer offer)
             {
-                string orderPath = offer.orderPath;
+                string orderPath = offer.OrderPath;
                 FileHandler.OpenFolder(orderPath, DIR_TYPE.Order);
        
                 OffersDataGrid.Items.Refresh();
                
             }
         }
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        protected void OnPropertyChanged(string name)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
+        private void Filter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(sender is TextBox)
+            {
+                viewModel.FilterByPattern(TxtIdFilter.Text.ToUpper());
+            }
+        }
     }
 }

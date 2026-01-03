@@ -1,4 +1,5 @@
-﻿using Nesdesign.Data;
+﻿
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -7,6 +8,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -15,8 +18,27 @@ namespace Nesdesign.Models
     public class OffersViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<Offer> Offers { get; set; }
+        public ClientsViewModel ClientsModel { get; set; }
 
         private ICollectionView? _offersView;
+        private bool loaded = false;
+
+        private bool showPaymentData = true;
+
+        public bool ShowPaymentData
+        {
+            get => showPaymentData;
+            set
+            {
+                if (showPaymentData != value)
+                {
+                    showPaymentData = value;
+                    
+                    OnPropertyChanged(nameof(ShowPaymentData));
+                }
+            }
+        }
+
         public ICollectionView OffersView
         {
             get
@@ -28,29 +50,32 @@ namespace Nesdesign.Models
             }
         }
 
-        public OffersViewModel()
+        public OffersViewModel(ClientsViewModel clientsModel)
         {
             Offers = new ObservableCollection<Offer>();
+            ClientsModel = clientsModel;
             Offers.CollectionChanged += Offers_CollectionChanged;
-            
+            LoadOffersAsync();
+        
+       
+          
+
         }
 
-        // Wywołać z UI (np. MainWindow Loaded)
-        public async Task InitializeAsync()
+        public async Task LoadOffersAsync()
         {
-            await SqliteDatabase.InitializeAsync();
-            await LoadFromDatabaseAsync();
-        }
-
-        private async Task LoadFromDatabaseAsync()
-        {
-            var items = await SqliteDatabase.GetOffersAsync(); // <-- poprawione: GetOffersAsync zamiast SGetOffersAsync
-            foreach (var o in items)
+            var offersList = await DatabaseHandler.GetOffersAsync();
+            foreach (var offer in offersList)
             {
-                SubscribeOffer(o);
-                Offers.Add(o);
+                Offers.Add(offer);
+                offer.LoadPhoto(offer.PhotoPath);
+                SubscribeOffer(offer);
             }
+            loaded = true;
         }
+
+    
+
 
         private void SubscribeOffer(Offer o)
         {
@@ -67,35 +92,27 @@ namespace Nesdesign.Models
 
         private void Offer_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+
             if (sender is Offer o)
             {
-                // Fire-and-forget zapis asynchroniczny (bez blokowania UI). Obsługa wyjątków wewnątrz.
-                _ = SaveOfferAsync(o);
+               
+                DatabaseHandler.UpdateRecordAsync(o);
+
             }
+
         }
 
-        private static async Task SaveOfferAsync(Offer o)
+        private async void Offers_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            try
-            {
-                await SqliteDatabase.InsertOrUpdateOfferAsync(o);
-                Debug.WriteLine($"Offer {o.offerId} saved to database.");
-            }
-            catch (Exception)
-            {
-                // TODO: logowanie błędu
-            }
-        }
-
-        private void Offers_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            // Subscribe new items
             if (e.NewItems != null)
             {
+               
                 foreach (Offer o in e.NewItems)
                 {
                     SubscribeOffer(o);
-                    _ = SaveOfferAsync(o); // persist new item async
+                    if (loaded)
+                        await DatabaseHandler.AddRecordAsync(o);
+
                 }
             }
 
@@ -105,7 +122,7 @@ namespace Nesdesign.Models
                 foreach (Offer o in e.OldItems)
                 {
                     UnsubscribeOffer(o);
-                    _ = SqliteDatabase.DeleteOfferAsync(o.offerId);
+                    //_ = SqliteDatabase.DeleteOfferAsync(o.OfferId);
                 }
             }
 
@@ -118,9 +135,10 @@ namespace Nesdesign.Models
             OffersView.Refresh();
         }
 
-        // Latest offerId property
-        public string LatestOfferId => Offers.Count > 0 ? Offers[^1].offerId : "N0000000";
-        public string SelectedOfferId => SelectedItem != null ? SelectedItem.offerId : "N0000000";
+ 
+        // Latest OfferId property
+        public string LatestOfferId => Offers.Count > 0 ? Offers[^1].OfferId : "N0000000";
+        public string SelectedOfferId => SelectedItem != null ? SelectedItem.OfferId : "N0000000";
 
         private Offer _selectedItem;
         public Offer SelectedItem
@@ -139,11 +157,6 @@ namespace Nesdesign.Models
             }
         }
 
-
-        
-
-
-
         public event PropertyChangedEventHandler PropertyChanged;
 
 
@@ -154,8 +167,34 @@ namespace Nesdesign.Models
             OffersView.Filter = obj =>
             {
                 var offer = obj as Offer;
-                return offer != null && offer.status == status;
+                return offer != null && offer.Status == status;
             };
+        }
+
+        public void FilterByPattern(string pattern)
+        {
+            if (string.IsNullOrEmpty(pattern))
+            {
+                ClearFilter();
+                return;
+            }
+            try
+            {
+                var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                OffersView.Filter = obj =>
+                {
+                    var offer = obj as Offer;
+                    return offer != null && !string.IsNullOrEmpty(offer.OfferId) && regex.IsMatch(offer.OfferId);
+                };
+            }
+            catch (ArgumentException)
+            {
+                OffersView.Filter = obj =>
+                {
+                    var offer = obj as Offer;
+                    return offer != null && !string.IsNullOrEmpty(offer.OfferId) && offer.OfferId.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
+                };
+            }
         }
 
         public void ClearFilter()
@@ -163,30 +202,23 @@ namespace Nesdesign.Models
             OffersView.Filter = null;
         }
 
-        // -- DODANE: CountOffersMatching --
-        // Zwraca liczbę ofert, których offerId (lub inne pole) pasuje do wzorca regex.
-        // Przy błędnym wzorcu zwraca liczenie przez Contains (case-insensitive).
+
         public int CountOffersMatching(string pattern)
         {
             if (string.IsNullOrEmpty(pattern)) return 0;
 
-            // snapshot kolekcji, by uniknąć problemów z enumeracją
             var snapshot = Offers.ToList();
 
             try
             {
                 var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
-                return snapshot.Count(o => !string.IsNullOrEmpty(o.offerId) && regex.IsMatch(o.offerId));
+                return snapshot.Count(o => !string.IsNullOrEmpty(o.OfferId) && regex.IsMatch(o.OfferId));
             }
             catch (ArgumentException)
             {
-                // niepoprawny regex — fallback do Contains
-                return snapshot.Count(o => !string.IsNullOrEmpty(o.offerId) && o.offerId.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0);
+                return snapshot.Count(o => !string.IsNullOrEmpty(o.OfferId) && o.OfferId.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0);
             }
         }
-
-        // INotifyPropertyChanged implementation
-
         public void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

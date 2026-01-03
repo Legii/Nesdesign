@@ -9,15 +9,17 @@ using System.Windows.Media.Imaging;
 
 namespace Nesdesign
 {
-    public static class ImageCache
+    public static class ImageHandler
     {
-        private static readonly Dictionary<string, BitmapImage> _cache = new();
+        private static readonly Dictionary<string, BitmapImage> _cache = new Dictionary<string, BitmapImage>();
         public static string imageTemplatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "nesdesign_sp_z_o_o_logo.jpg");
         public static ImageSource LOGO = Get(imageTemplatePath);
 
 
         public static ImageSource Get(string path)
         {
+            if(string.IsNullOrEmpty(path))
+                return LOGO;
             if (_cache.TryGetValue(path, out var img))
                 return img;
 

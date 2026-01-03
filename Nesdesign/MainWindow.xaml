@@ -19,17 +19,24 @@
 
 
 
-    <DockPanel>
-
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
         <!-- Navigation Panel -->
-        <StackPanel DockPanel.Dock="Left" Background="#333" Width="150">
+        <StackPanel Grid.Column="0" Background="#333" Width="150" >
             <Button Content="Zapytania i projekty" Click="OffersClick" Margin="5"/>
             <Button Content="Klienci" Click="ClientsClick" Margin="5"/>
             <Button Content="Kreator" Background="LightBlue" Click="CreatorClick" Margin="5"/>
-
+            <Button Content="Ustawienia" Margin="5,200,0,0" Click="SettingsClick">
+                
+            </Button>
         </StackPanel>
 
         <!-- Content Area -->
-        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
-    </DockPanel>
+        <Frame  Grid.Column="1" x:Name="MainFrame" NavigationUIVisibility="Hidden" />
+    </Grid>
+
+
 </Window>

@@ -18,18 +18,17 @@ using System.Windows.Shapes;
 
 namespace Nesdesign
 {
-    /// <summary>
-    /// Logika interakcji dla klasy Creator.xaml
-    /// </summary>
-    public partial class Creator : Page
+
+    public partial class CreatorPage : Page
     {
         private readonly OffersViewModel _viewModel;
 
-        public Creator(OffersViewModel offersViewModel)
+        public CreatorPage(OffersViewModel offersViewModel)
         {
             InitializeComponent();
             _viewModel = offersViewModel;
             DataContext = _viewModel;
+            YearTextBox.Text = DateTime.Now.Year.ToString();
         }
 
         private void CreatorCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -96,7 +95,7 @@ namespace Nesdesign
 
             }
 
-            _viewModel.Offers.Add(new Offer(projectName, ImageCache.LOGO,"",1,"",0));
+            _viewModel.Offers.Add(new Offer(projectName, ImageHandler.LOGO,"",1,"",1));
             
 
         }
@@ -183,7 +182,7 @@ namespace Nesdesign
             DIR_TYPE dir_type;
             if(tag == "offer")
             {
-                dirname = offer.offerId;
+                dirname = offer.OfferId;
                 dir_type = DIR_TYPE.Offer;
             }
             else

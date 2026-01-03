@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 
@@ -26,91 +28,129 @@ namespace Nesdesign.Models
         ZAKONCZONA
     }
 
-    public class Offer : INotifyPropertyChanged
+    public partial class Offer : ObservableObject
     {
-        public string offerId { get; set; }
-        public string photoPath { get; set; }
+        [ObservableProperty]
+        [Column("offerId")]
+        private string offerId;
+
+
+
+
+        [Column("photoPath")]
+        [ObservableProperty]
+        private string photoPath = "";
+      
+      
+
+        [NotMapped]
         public ImageSource Photo { get; set; }
-        public string description { get; set; }
-        public int quantity { get; set; }
-        public string name { get; set; }
-        public int clientId { get; set; }
-        private string _orderNumber;
-        public string orderNumber
-        {
-            get => _orderNumber;
-            set
-            {
-                _orderNumber = value;
-                OnPropertyChanged(nameof(orderNumber));
-            }
-        }
-        public string orderPath;
 
-        public string construction { get; set; }
-        public string production { get; set; }
-        public string who { get; set; }
-        public DateOnly date1 { get; set; }
-        public DateOnly date2 { get; set; }
-        public string invoiceNumber { get; set; }
-        public int price { get; set; }
+        [ObservableProperty]
+        [Column("description")]
+        private string description = "";
+
+        [ObservableProperty]
+        [Column("quantity")]
+        private int quantity = 1;
+
+        [ObservableProperty]
+        [Column("name")]
+        private string name;
+
+        [ObservableProperty]
+        [Column("clientId")]
+        private int? clientId;
 
 
-        
-        public DateOnly sentDate { get; set; }
+        [ObservableProperty]
+        [Column("orderNumber")]
+        private string? orderNumber = "";
 
+        [ObservableProperty]
+        [Column("orderPath")]
+        private string? orderPath = "";
+
+        [ObservableProperty]
+        [Column("construction")]
+        private string? construction = "";
+
+        [ObservableProperty]
+        [Column("production")]
+        private string? production = "";
+
+        [ObservableProperty]
+        [Column("who")]
+        private string? who = "";
+
+        [ObservableProperty]
+        [Column("date1")]
+        private DateTime? date1;
+
+        [ObservableProperty]
+        [Column("date2")]
+        private DateTime? date2;
+
+        [ObservableProperty]
+        [Column("invoiceNumber")]
+        private string? invoiceNumber = "";
+
+        [ObservableProperty]
+        [Column("price")]
+        private int? price =100;
+
+        [ObservableProperty]
+        [Column("shipment")]
+        private bool shipment = false;
+
+        [NotMapped]
         private OfferStatus _status;
-        public OfferStatus status
+        
+        public OfferStatus Status
         {
             get => _status;
             set
             {
                 if (_status == value) return;
                 _status = value;
-                OnPropertyChanged(nameof(status));
+                OnPropertyChanged(nameof(Status));
                 OnPropertyChanged(nameof(statusString));
             }
         }
+        
+        public string DaysLeftToDate1 => (Date1.HasValue) ? "(" + (Date1.Value - DateTime.Now).Days + " dni)" : "";
+        public string DaysLeftToDate2 => (Date2.HasValue) ? "(" + (Date2.Value - DateTime.Now).Days + " dni)" : "";
 
-        public string statusString => StringHandler.GetEnumString(this.status);
+        public string statusString => StringHandler.GetEnumString(this.Status);
 
-        private bool _closed = false;
-        public bool Closed
+        [ObservableProperty]
+        private bool closed = false;
+
+        public string projectPath => !String.IsNullOrEmpty(Construction) ? Construction : Production;
+
+        public Offer() { }
+
+        public Offer(string OfferId, ImageSource imageSource, string description, int quantity, string name, int clientId)
         {
-            get => _closed;
-            set
-            {
-                if (_closed == value) return;
-                _closed = value;
-                OnPropertyChanged(nameof(Closed));
-            }
-        }
-
-        public string projectPath => construction != null ? construction : production;
-
-        public Offer() {}
-
-        public Offer(string offerId, ImageSource imageSource, string description, int quantity, string name, int clientId)
-        {
-            this.offerId = offerId;
+            this.OfferId = OfferId;
             this.Photo = imageSource;
             this.description = description;
             this.quantity = quantity;
             this.name = name;
             this.clientId = clientId;
-            this.status = OfferStatus.UTWORZONA;
-       
+            this.Status = OfferStatus.UTWORZONA;
+
             Closed = false;
         }
 
         public void setProject(bool isConstruction = false)
         {
-            string pname = "P" + this.offerId.Substring(1);
+            string pname = "P" + this.OfferId.Substring(1);
             if (isConstruction)
-                this.construction = pname;
+                this.Construction = pname;
             else
-                this.production = pname;
-        
+                this.Production = pname;
+
         }
 
         public void setProjectAndCopy(bool isConstruction = false)
@@ -120,38 +160,37 @@ namespace Nesdesign.Models
         }
 
 
-        public void loadPhoto(string path)
+        public void LoadPhoto(string path)
         {
-            if(this.photoPath != null)
-                ImageCache.Unload(this.photoPath);
             this.photoPath = path;
-            this.Photo = ImageCache.SafeGet(this.photoPath);
+            if (this.photoPath != null)
+                ImageHandler.Unload(this.photoPath);
             
+            this.Photo = ImageHandler.SafeGet(this.photoPath);
+            this.OnPropertyChanged(nameof(Photo));
         }
 
         public override string ToString()
         {
-            return String.Join(" ", [this.orderNumber, this.orderPath, this.offerId]);
+            return this.OrderNumber;
+            //return String.Join(" ", [this.OrderNumber, this.orderPath, this.OfferId]);
         }
 
-        
+
 
         public static Offer TemplateConstructor()
         {
             return new Offer
             {
                 offerId = "N00" + StringHandler.RandomString(4),
-                Photo = ImageCache.LOGO,
+                Photo = ImageHandler.LOGO,
                 description = StringHandler.RandomString(20),
                 quantity = 0,
                 name = StringHandler.RandomString(7),
                 clientId = 0,
                 Closed = false
-            } ; 
+            };
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName ?? string.Empty));
     }
 }

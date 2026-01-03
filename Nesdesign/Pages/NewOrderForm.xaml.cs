@@ -45,8 +45,8 @@ namespace Nesdesign
         {
             _editingOffer = offer;
 
-            txtOrderNumber.Text = offer.orderNumber;
-            TxtOrderDirPath.Text = offer.orderPath;
+            txtOrderNumber.Text = offer.OrderNumber;
+            TxtOrderDirPath.Text = offer.OrderPath;
         }
 
 
@@ -54,8 +54,8 @@ namespace Nesdesign
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
 
-            _editingOffer.orderNumber = txtOrderNumber.Text;
-            _editingOffer.orderPath = OrderMode.SelectedIndex == 0? txtOrderNumber.Text :TxtOrderDirPath.Text;
+            _editingOffer.OrderNumber = txtOrderNumber.Text;
+            _editingOffer.OrderPath = OrderMode.SelectedIndex == 0? txtOrderNumber.Text :TxtOrderDirPath.Text;
 
             _callback?.Invoke(_editingOffer);
 

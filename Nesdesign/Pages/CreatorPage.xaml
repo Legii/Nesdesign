@@ -1,4 +1,4 @@
-﻿<Page x:Class="Nesdesign.Creator"
+﻿<Page x:Class="Nesdesign.CreatorPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -24,8 +24,8 @@
         </Grid>
 
         <!-- Używamy Border z Padding zamiast Padding na Grid -->
-        <Border Background="AliceBlue" Margin="225,0,0,0" Padding="24">
-            <Grid>
+        <Border Background="White" Margin="225,0,0,0" Padding="24">
+            <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="350"/>
                     <!-- Kolumna przycisków -->
@@ -35,7 +35,7 @@
                 </Grid.ColumnDefinitions>
                 <!-- Kolumna z danymi -->
            
-            <Grid>
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>  <!-- LabelLastOffer -->
                     <RowDefinition Height="24"/>    <!-- odstęp -->
@@ -82,7 +82,7 @@
                         <ComboBoxItem Content="Grudzień (12)"/>
                     </ComboBox>
 
-                    <TextBox Width="130" Height="20" Margin="10,0,0,0" x:Name="YearTextBox" Text="2025"/>
+                    <TextBox Width="130" Height="20" Margin="10,0,0,0" x:Name="YearTextBox" Text="2026"/>
                 </StackPanel>
 
                 <Button Content="NOWE ZAPYTANIE" Grid.Row="6" HorizontalAlignment="Left" Style="{StaticResource VeryBigButton}" Click="CreateOfferClick"/>
@@ -109,6 +109,36 @@
                 <Label x:Name="MessageLabel2" Grid.Row="15" HorizontalAlignment="Left" Width="334" />
               
             </Grid>
+                <Grid Background="#00B0F0" Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    
+                        <RowDefinition Height="24"/>
+                        <!-- odstęp -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- CreatorCombobox -->
+                        <RowDefinition Height="8"/>
+                        <!-- odstęp -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- MonthYearPanel (SelectMonth) -->
+                        <RowDefinition Height="30"/>
+                        <!-- odstęp -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- NOWE ZAPYTANIE -->
+            
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Row="0" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Width="200" RenderTransformOrigin="0.136,0.586" Source="{Binding SelectedItem.Photo}"/>
+                    <Label Grid.Row="0" Content="{Binding SelectedItem.OfferId}" HorizontalAlignment="Center" Grid.Column="2" VerticalAlignment="Center"  FontSize="50" Foreground="White"/>
+                    <Label Grid.Row="2" Content="OPIS:" Style="{StaticResource Text}" Grid.Column="0" HorizontalAlignment="Center"></Label>
+                    <Label Grid.Row="2" Content="{Binding SelectedItem.Description}" Grid.Column="2" Style="{StaticResource Text}"></Label>
+                    <Label Grid.Row="4" Content="ZAMÓWIENIE:" Style="{StaticResource Text}" Grid.Column="0" HorizontalAlignment="Center"></Label>
+                    <Label Grid.Row="4" Content="{Binding SelectedItem.OrderNumber}" Grid.Column="2" Style="{StaticResource Text}"></Label>
+                </Grid>
+
             </Grid>
 
         </Border>

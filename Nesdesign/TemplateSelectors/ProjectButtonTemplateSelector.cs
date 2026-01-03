@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Nesdesign
+namespace Nesdesign.TemplateSelectors
 {
     public class ProjectButtonTemplateSelector : DataTemplateSelector
     {
@@ -29,10 +29,10 @@ namespace Nesdesign
                 var cell = container as FrameworkElement;
                 var column = cell?.Parent as DataGridCell;
                 var tag = (column?.Column as MyTemplateColumn)?.ColumnKey as string;
-                // Jeśli orderNumber jest puste → A
-                if (string.IsNullOrWhiteSpace(tag == "production"? offer.production : offer.construction))
+
+                if (string.IsNullOrWhiteSpace(tag == "production"? offer.Production : offer.Construction))
                     return TemplateA;
-                // Jeśli orderNumber ma wartość → B
+        
                 return TemplateB;
             }
 

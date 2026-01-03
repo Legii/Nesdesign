@@ -5,7 +5,11 @@
              StartupUri="MainWindow.xaml">
 
     <Application.Resources>
-       
+
+        <Style x:Key="Text" TargetType="Label">
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="FontSize" Value="30"></Setter>
+        </Style>
 
         <Style TargetType="Button">
             <Setter Property="Background" Value="White"/>
@@ -36,6 +40,12 @@
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Background" Value="LightBlue"/>
             
+        </Style>
+
+        <Style TargetType="DataGridCell" x:Key="Column">
+            <Setter Property="Background" Value="Purple"></Setter>
+            <Setter Property="MinWidth" Value="100"></Setter>
+            <Setter Property="Width" Value="100"></Setter>
         </Style>
     </Application.Resources>
 </Application>
