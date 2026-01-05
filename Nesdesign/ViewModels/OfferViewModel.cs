@@ -1,5 +1,5 @@
 ﻿
-using GalaSoft.MvvmLight.Messaging;
+
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -20,10 +20,71 @@ namespace Nesdesign.Models
         public ObservableCollection<Offer> Offers { get; set; }
         public ClientsViewModel ClientsModel { get; set; }
 
+        private string _filterPattern { get; set; } = string.Empty;
+        public string FilterPattern
+        {
+            get => _filterPattern;
+            set
+            {
+                _filterPattern = value;
+                ApplyCombinedFilter(FilterPattern);
+                OnPropertyChanged(nameof(FilterPattern));
+            }
+        }
+
+
+
+        private int? _filteredClientId;
+        public int? FilteredClientId
+        {
+            get => _filteredClientId;
+            set
+            {
+               
+                _filteredClientId = value;
+
+                ApplyCombinedFilter(FilterPattern);
+                OnPropertyChanged(nameof(FilteredClientId));
+            }
+        }
+
+        private OfferStatus? _filteredStatus;
+        public OfferStatus? FilteredStatus
+        {
+            get => _filteredStatus;
+            set
+            {
+                _filteredStatus = value;
+                ApplyCombinedFilter(FilterPattern);
+                OnPropertyChanged(nameof(FilteredStatus));
+            }
+        }
+
+
         private ICollectionView? _offersView;
         private bool loaded = false;
 
         private bool showPaymentData = true;
+        private decimal _totalSum;
+
+        public decimal TotalSum
+        {
+            get => _totalSum;
+            private set
+            {
+                _totalSum = value;
+                OnPropertyChanged(nameof(TotalSum));
+            }
+        }
+
+        private void UpdateSum()
+        {
+        TotalSum = OffersView
+        .Cast<Offer>()
+        .Sum(o => o.Price != null ? (decimal)o.Price : 0);
+        
+        }
+
 
         public bool ShowPaymentData
         {
@@ -95,7 +156,13 @@ namespace Nesdesign.Models
 
             if (sender is Offer o)
             {
-               
+
+             
+                if (e.PropertyName != nameof(Offer.AllInfo) && e.PropertyName != nameof(Offer.Photo))
+                {
+                   o.UpdateAllInfo();
+                }
+                UpdateSum();
                 DatabaseHandler.UpdateRecordAsync(o);
 
             }
@@ -130,6 +197,8 @@ namespace Nesdesign.Models
             OnPropertyChanged(nameof(LatestOfferId));
             SelectedItem = Offers[^1];
             OnPropertyChanged(nameof(SelectedItem));
+           OnPropertyChanged(nameof(SelectedOfferId));
+           UpdateSum();
 
             // Refresh filter if applied
             OffersView.Refresh();
@@ -162,14 +231,95 @@ namespace Nesdesign.Models
 
         public string SelectedProject;
         // Filtering methods
+ 
+
+
+        public bool StatusFilter(object obj)
+        {
+            if (obj is Offer offer)
+            {
+                if (FilteredStatus.HasValue)
+                {
+                    return offer.Status == FilteredStatus.Value;
+                }
+                return true; // No status filter applied
+            }
+            return false;
+        }
+
+        public bool ClientFilter(object obj)
+        {
+            if (obj is Offer offer)
+            {
+                if (FilteredClientId.HasValue)
+                {
+                    return offer.ClientId == FilteredClientId.Value;
+                }
+                return true; // No client filter applied
+            }
+            return false;
+        }
+
+
+        public bool PatternFilter(object obj, string pattern)
+        {
+            if (obj is Offer offer)
+            {
+                if (string.IsNullOrEmpty(pattern))
+                {
+                    return true; // No pattern filter applied
+                }
+                try
+                {
+                    var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                    return !string.IsNullOrEmpty(offer.AllInfo) && regex.IsMatch(offer.AllInfo);
+                }
+                catch (ArgumentException)
+                {
+                    return !string.IsNullOrEmpty(offer.AllInfo) && offer.AllInfo.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
+                }
+            }
+            return false;
+        }
+
+        public void ApplyCombinedFilter(string pattern)
+        {
+            OffersView.Filter = obj =>
+            {
+                return StatusFilter(obj) && ClientFilter(obj) && PatternFilter(obj, pattern);
+            };
+            UpdateSum();
+        }
+
+
+        
         public void FilterByStatus(OfferStatus status)
         {
+            ClearFilters();
+            FilteredStatus = status;
             OffersView.Filter = obj =>
             {
                 var offer = obj as Offer;
                 return offer != null && offer.Status == status;
             };
         }
+        /*
+        public void FilterByClient(int clientId)
+        {
+       
+
+            OffersView.Filter = obj =>
+            {
+                var offer = obj as Offer;
+                return offer != null && offer.ClientId == clientId;
+            };
+           
+            if(clientId <= 0)
+            {
+                ClearFilter();
+            }
+        }
+
 
         public void FilterByPattern(string pattern)
         {
@@ -184,7 +334,7 @@ namespace Nesdesign.Models
                 OffersView.Filter = obj =>
                 {
                     var offer = obj as Offer;
-                    return offer != null && !string.IsNullOrEmpty(offer.OfferId) && regex.IsMatch(offer.OfferId);
+                    return offer != null && !string.IsNullOrEmpty(offer.OfferId) && regex.IsMatch(offer.AllInfo);
                 };
             }
             catch (ArgumentException)
@@ -192,14 +342,23 @@ namespace Nesdesign.Models
                 OffersView.Filter = obj =>
                 {
                     var offer = obj as Offer;
-                    return offer != null && !string.IsNullOrEmpty(offer.OfferId) && offer.OfferId.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
+                    return offer != null && !string.IsNullOrEmpty(offer.AllInfo) && offer.AllInfo.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
                 };
             }
         }
-
-        public void ClearFilter()
+        */
+        public void ClearFilters()
         {
+            if(FilteredStatus.HasValue || FilteredStatus.HasValue || FilterPattern != "")
+            {
+                FilteredStatus = null;
+                FilteredClientId = null;
+                FilterPattern = string.Empty;
+            }
+   
+
             OffersView.Filter = null;
+            UpdateSum();
         }
 
 

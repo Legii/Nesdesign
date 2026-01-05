@@ -27,6 +27,7 @@ namespace Nesdesign
         {
             using (var db = new OffersDbContext())
             {
+            
                 await db.Set<T>().AddAsync(entity);
                 await db.SaveChangesAsync();
             }

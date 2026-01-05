@@ -247,7 +247,7 @@ namespace Nesdesign
 
         private void ClearFilterClick(object sender, RoutedEventArgs e)
         {
-            _viewModel.ClearFilter();
+            _viewModel.ClearFilters();
             if (Application.Current.MainWindow is MainWindow mainWindow)
             {
                 mainWindow.NavigateToOffersPage();

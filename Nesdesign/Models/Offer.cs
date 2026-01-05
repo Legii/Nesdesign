@@ -121,6 +121,9 @@ namespace Nesdesign.Models
         public string DaysLeftToDate1 => (Date1.HasValue) ? "(" + (Date1.Value - DateTime.Now).Days + " dni)" : "";
         public string DaysLeftToDate2 => (Date2.HasValue) ? "(" + (Date2.Value - DateTime.Now).Days + " dni)" : "";
 
+        [NotMapped]
+        public string AllInfo => $"{OfferId} {Description} {orderNumber} {name} ";
+
         public string statusString => StringHandler.GetEnumString(this.Status);
 
         [ObservableProperty]
@@ -172,8 +175,8 @@ namespace Nesdesign.Models
 
         public override string ToString()
         {
-            return this.OrderNumber;
-            //return String.Join(" ", [this.OrderNumber, this.orderPath, this.OfferId]);
+            string t = $"OfferId: {OfferId}, Name: {name}, Description: {description}, Quantity: {quantity}, ClientId: {clientId}, Status: {Status}";
+            return t;
         }
 
 
@@ -192,5 +195,17 @@ namespace Nesdesign.Models
             };
         }
 
+
+       // public event PropertyChangedEventHandler PropertyChanged;
+
+        //protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+          //  => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        public void UpdateAllInfo() { 
+        
+        OnPropertyChanged(nameof(AllInfo));
+        }
+
     }
+
 }

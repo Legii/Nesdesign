@@ -1,7 +1,4 @@
-﻿
-using CommunityToolkit.Mvvm.Messaging;
-using GalaSoft.MvvmLight.Messaging;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -10,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using System.Collections.Generic;
+using System.Windows;
 
 namespace Nesdesign.Models
 {
@@ -45,6 +43,12 @@ namespace Nesdesign.Models
                 Clients.Add(defaultClient);
                 await DatabaseHandler.AddRecordAsync(defaultClient);
             }
+           /* string t = "";
+            foreach (Client c in Clients)
+            {
+               t += c.Name +"("+c.ClientId + ")" + ", ";
+            }
+            MessageBox.Show("Clients loaded: " + t);*/
         }
         private void SubscribeClient(Client c)
         {

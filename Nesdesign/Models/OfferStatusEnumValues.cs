@@ -9,12 +9,13 @@ namespace Nesdesign.Models
     public static class OfferStatusEnumValues
     {
 
-        public class EnumItem<T>
+        public class EnumItem<T> where T: struct, Enum
         {
-            public T Value { get; set; }
+            public T? Value { get; set; } 
             public string Description { get; set; }
         }
         public static List<EnumItem<OfferStatus>> AllValues { get; } =
+
                    Enum.GetValues(typeof(OfferStatus))
                        .Cast<OfferStatus>()
                        .Select(v => new EnumItem<OfferStatus>
@@ -23,5 +24,11 @@ namespace Nesdesign.Models
                            Description = StringHandler.GetEnumString(v)
                        })
                        .ToList();
+        public static List<EnumItem<OfferStatus>> AllValuesPlusNull { get; } =
+           new List<EnumItem<OfferStatus>> { new EnumItem<OfferStatus> { Value = null, Description = "" } }
+           .Concat(AllValues).ToList();
+       
+
     }
 }
+

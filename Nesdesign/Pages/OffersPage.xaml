@@ -17,7 +17,7 @@
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="MinWidth" Value="120"/>
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="MinHeight" Value="50"/>
+
         </Style>
           
         
@@ -72,8 +72,12 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
 
+       <local:IntToStringConverter x:Key="IntToStringConverter" />
+ 
 
-   
+
+
+
     </Page.Resources>
 
    
@@ -86,11 +90,30 @@
         <!-- Checkbox sterujący widocznością kolumn faktury/kwoty -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <!--Checkbox-->
                 <ColumnDefinition Width="Auto"/>
+                <!--Margin-->
                 <ColumnDefinition Width="50"/>
+                <!--Filter Textbox-->
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <!--Margin-->
                 <ColumnDefinition Width="50"/>
+                <!---Filter client-->
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <!--Margin-->
+                <ColumnDefinition Width="50"/>
+                <!--Filter status-->
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <!--Margin-->
+                <ColumnDefinition Width="50"/>
+                <!--ClearFilters-->
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <!--Margin-->
+                <ColumnDefinition Width="50"/>
+                <!--Total sum-->
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -102,8 +125,36 @@
                   VerticalAlignment="Center"
                   HorizontalAlignment="Left"
                   Margin="10,0,0,0"/>
-            <Label Content="Filtruj: Id" Grid.Column="2"></Label>
-            <TextBox Grid.Column="3" Text="" MinWidth="200" Height="30" x:Name="TxtIdFilter" TextChanged="Filter_TextChanged"/>
+            
+            <Label Content="Filtruj" Grid.Column="2"></Label>
+            <TextBox Grid.Column="3" Text="{Binding FilterPattern}" MinWidth="200" Height="30" x:Name="TxtIdFilter" />
+
+            <!--Filtruj klient-->
+            <Label Content="Filtruj klienta" Grid.Column="5"></Label>
+            <ComboBox
+            Grid.Column="6" Margin="10,0,0,0"
+            ItemsSource="{Binding ClientsModel.Clients}"
+             DisplayMemberPath="Name"
+             SelectedValuePath="ClientId"
+             SelectedValue="{Binding FilteredClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+             IsEditable="False"/>
+
+
+            <!--Filtruj STATUS-->
+            <Label Content="Filtruj status" Grid.Column="8"></Label>
+            <ComboBox
+            Grid.Column="9" Margin="10,0,0,0"
+     ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValuesPlusNull} }"
+     DisplayMemberPath="Description"
+     SelectedValuePath="Value"
+     SelectedValue="{Binding FilteredStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+     IsEditable="False"
+     />
+            <Button x:Name="ClearFiltersButton" Content="Wyczyść Filtry" Grid.Column="11" Padding="0" Width="100" Height="30" Click="ClearFiltersButton_Click"></Button>
+
+            <!--Całkowita wartość projektów-->
+            <Label Content="Całkowita wartość:" Grid.Column="13"></Label>
+            <TextBlock Grid.Column="14" Text="{Binding TotalSum}" FontWeight="Bold" Foreground="DarkGreen" Height="30" FontSize="18" VerticalAlignment="Center"/>
 
         </Grid>
 
@@ -128,7 +179,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                
+                    <DataGridTextColumn Header="*" Binding="{Binding AllInfo,  UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" MinWidth="40" 
+                                        CellStyle="{StaticResource Callback}"/>
+
                     <DataGridTextColumn Header="Nr oferty / zapytania" Binding="{Binding OfferId}"  MinWidth="80" 
                                         CellStyle="{StaticResource Callback}"/>
                     <DataGridTemplateColumn>
@@ -146,7 +199,8 @@
                     <DataGridTextColumn Header="Ilość" MinWidth="40" Binding="{Binding Quantity}"/>
                     <DataGridTextColumn Header="Nazwa / numer" MinWidth="100" Binding="{Binding Name}"/>
 
-
+                    
+                    <!-- Offer client selection -->
                     <DataGridTemplateColumn Header="Klient">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -161,8 +215,8 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-
-
+                    
+                    <!--Offer status selection-->
                     <DataGridTemplateColumn Header="Status"   MinWidth="150">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -185,7 +239,7 @@
                     <local:MyTemplateColumn Header="Produkcja"
                      CellTemplateSelector="{StaticResource ProjectButtonSelector}" ColumnKey="production" MinWidth="140"/>
 
-                    <DataGridTextColumn Header="Kto" Binding="{Binding Who}" MinWidth="100"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Kto" Binding="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="100"></DataGridTextColumn>
                     <DataGridCheckBoxColumn Header="Wysyłka" Binding="{Binding Shipment, Mode=TwoWay}" MinWidth="80"/>
                     <DataGridTemplateColumn Header="Termin wykonania" MinWidth="160">
                         <DataGridTemplateColumn.CellTemplate>
@@ -211,17 +265,17 @@
 
           
                     <DataGridTextColumn Header="Nr faktury"
-                                        Binding="{Binding InvoiceNumber, Mode=TwoWay}"
+                                        Binding="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         MinWidth="160"
                                         CellStyle="{StaticResource Callback}"
                                         x:Name="InvoiceColumn"
                                        />
 
-                    <DataGridTextColumn Header="Kwota [zł]"
-                                        Binding="{Binding Price, Mode=TwoWay}"
-                                        MinWidth="160" x:Name="PriceColumn"
-                                      >
-                      
+                    <DataGridTextColumn Header="Kwota [zł]"           MinWidth="160" x:Name="PriceColumn">
+                        <DataGridTextColumn.Binding>
+                        <Binding Path="Price" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource IntToStringConverter}" />
+                       </DataGridTextColumn.Binding>
+  
                     </DataGridTextColumn>
 
                     <DataGridTemplateColumn Header="Zamykanie" MinWidth="160">

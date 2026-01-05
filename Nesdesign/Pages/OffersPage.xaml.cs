@@ -118,7 +118,6 @@ namespace Nesdesign
                 string orderPath = offer.OrderPath;
                 FileHandler.OpenFolder(orderPath, DIR_TYPE.Order);
        
-                OffersDataGrid.Items.Refresh();
                
             }
         }
@@ -127,12 +126,9 @@ namespace Nesdesign
         protected void OnPropertyChanged(string name)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        private void Filter_TextChanged(object sender, TextChangedEventArgs e)
+        private void ClearFiltersButton_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is TextBox)
-            {
-                viewModel.FilterByPattern(TxtIdFilter.Text.ToUpper());
-            }
+            this.viewModel.ClearFilters();
         }
     }
 }
