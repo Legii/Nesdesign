@@ -3,10 +3,13 @@ using Nesdesign.Pages;
 using System.Collections;
 using System.Windows;
 using System.Collections.Generic;
+using System.IO;
 namespace Nesdesign
 {
     public partial class MainWindow : Window
+
     {
+        private DatabaseHandler dbHandler { get; } = new DatabaseHandler();
         private SettingsManager settingsManager;
         OffersViewModel offersViewModel { get; set; }
         ClientsViewModel clientsViewModel { get; set; }
@@ -26,9 +29,22 @@ namespace Nesdesign
 
         public MainWindow()
         {
+            settingsManager = new SettingsManager();
+            
+            FileHandler.CreateBaseDir();
+            try
+            {
+                dbHandler.ConnectToDatabase();
+            } catch
+            {
+                MessageBox.Show("Nie udało się utworzyć folderu lub połączzyć z bazą danych"); return;
+            }
+          
+            
+
             InitializeComponent();
             PreloadImages(new List<string> {  });
-            settingsManager = new SettingsManager();
+           
             clientsViewModel = new ClientsViewModel();
             offersViewModel = new OffersViewModel(clientsViewModel);
           

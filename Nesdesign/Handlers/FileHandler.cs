@@ -52,6 +52,14 @@ namespace Nesdesign
             return dirPath;
         }
 
+
+        public static void CreateBaseDir()
+        {
+            if(!Directory.Exists(BASE_PATH))
+            {
+                Directory.CreateDirectory(BASE_PATH);
+            }
+        }
         public static FileOperationStatus CreateDir(string dirname, DIR_TYPE dir_type) 
         {
 

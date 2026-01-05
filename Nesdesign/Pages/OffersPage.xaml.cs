@@ -57,6 +57,8 @@ namespace Nesdesign
                     Visibility visibility = viewModel.ShowPaymentData ? Visibility.Visible : Visibility.Collapsed;
                     InvoiceColumn.Visibility = visibility;
                     PriceColumn.Visibility = visibility;
+                    PaymentStatusColumn.Visibility = visibility;
+
                 }
 
 

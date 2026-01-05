@@ -7,26 +7,7 @@ using System.Windows.Media;
 
 namespace Nesdesign.Models
 {
-    public enum OfferStatus {
-        [System.ComponentModel.Description("Utworzona")]
-        UTWORZONA,
-        [System.ComponentModel.Description("nie ofertowana")]
-        NIE_OFERTOWANA,
-        [System.ComponentModel.Description("Oferta mailowa")]
-        OFERTA_MAILOWA,
-        [System.ComponentModel.Description("Oferta")]
-        OFERTA,
-        [System.ComponentModel.Description("Zamówienie")]
-        ZAMOWIENIE,
-        [System.ComponentModel.Description("W realizacji")]
-        W_REALIZACJI,
-        [System.ComponentModel.Description("Gotowa")]
-        GOTOWA,
-        [System.ComponentModel.Description("Wysłana")]
-        WYSLANA,
-        [System.ComponentModel.Description("Zakończona")]
-        ZAKONCZONA
-    }
+
 
     public partial class Offer : ObservableObject
     {
@@ -103,6 +84,11 @@ namespace Nesdesign.Models
         [Column("shipment")]
         private bool shipment = false;
 
+        [Column("paymentStatus")]
+        [ObservableProperty]
+        private PaymentStatus _paymentStatus = Models.PaymentStatus.NIEWYSTAWIONA;
+
+
         [NotMapped]
         private OfferStatus _status;
         
@@ -141,7 +127,7 @@ namespace Nesdesign.Models
             this.quantity = quantity;
             this.name = name;
             this.clientId = clientId;
-            this.Status = OfferStatus.UTWORZONA;
+            this.Status = OfferStatus.OFERTA;
 
             Closed = false;
         }

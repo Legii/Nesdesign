@@ -273,10 +273,23 @@
 
                     <DataGridTextColumn Header="Kwota [zł]"           MinWidth="160" x:Name="PriceColumn">
                         <DataGridTextColumn.Binding>
-                        <Binding Path="Price" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource IntToStringConverter}" />
-                       </DataGridTextColumn.Binding>
-  
+                            <Binding Path="Price" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource IntToStringConverter}" />
+                        </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
+
+                    <DataGridTemplateColumn Header="Status płatności"   MinWidth="150" x:Name="PaymentStatusColumn">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox
+                ItemsSource="{Binding Source={x:Static models:PaymentStatusEnumValues.AllValues} }"
+                DisplayMemberPath="Description"
+                SelectedValuePath="Value"
+                SelectedValue="{Binding PaymentStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                IsEditable="False"
+                />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
                     <DataGridTemplateColumn Header="Zamykanie" MinWidth="160">
                         <DataGridTemplateColumn.CellTemplate>

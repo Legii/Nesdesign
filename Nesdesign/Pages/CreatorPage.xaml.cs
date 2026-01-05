@@ -219,7 +219,7 @@ namespace Nesdesign
 
         private void CreatedFilterClick(object sender, RoutedEventArgs e)
         {
-            Filter(OfferStatus.UTWORZONA);
+            Filter(OfferStatus.NIE_OFERTOWANA);
         }
         private void Option2FilterClick(object sender, RoutedEventArgs e)
         {
