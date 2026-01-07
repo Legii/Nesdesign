@@ -108,7 +108,7 @@ namespace Nesdesign.Models
         public string DaysLeftToDate2 => (Date2.HasValue) ? "(" + (Date2.Value - DateTime.Now).Days + " dni)" : "";
 
         [NotMapped]
-        public string AllInfo => $"{OfferId} {Description} {orderNumber} {name} ";
+        public string AllInfo => $"{OfferId} {Description} {orderNumber} {name} {orderPath} ";
 
         public string statusString => StringHandler.GetEnumString(this.Status);
 
@@ -127,7 +127,7 @@ namespace Nesdesign.Models
             this.quantity = quantity;
             this.name = name;
             this.clientId = clientId;
-            this.Status = OfferStatus.OFERTA;
+            this.Status = OfferStatus.UTWORZONA;
 
             Closed = false;
         }

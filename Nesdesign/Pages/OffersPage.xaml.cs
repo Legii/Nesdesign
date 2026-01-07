@@ -58,6 +58,8 @@ namespace Nesdesign
                     InvoiceColumn.Visibility = visibility;
                     PriceColumn.Visibility = visibility;
                     PaymentStatusColumn.Visibility = visibility;
+                    LabelTotalSum.Visibility = visibility;
+                    TextboxTotalSum.Visibility = visibility;
 
                 }
 

@@ -219,30 +219,55 @@ namespace Nesdesign
 
         private void CreatedFilterClick(object sender, RoutedEventArgs e)
         {
-            Filter(OfferStatus.NIE_OFERTOWANA);
+            Filter(OfferStatus.UTWORZONA);
+            if (Application.Current.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.NavigateToOffersPage();
+            }
         }
         private void Option2FilterClick(object sender, RoutedEventArgs e)
         {
             Filter(OfferStatus.OFERTA);
+            if (Application.Current.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.NavigateToOffersPage();
+            }
         }
 
         private void Option3FilterClick(object sender, RoutedEventArgs e)
         {
-            Filter(OfferStatus.ZAMOWIENIE);
+            Filter(OfferStatus.NIE_OFERTOWANA);
+            if (Application.Current.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.NavigateToOffersPage();
+            }
         }
 
         private void InProgressFilterClick(object sender, RoutedEventArgs e)
         {
             Filter(OfferStatus.W_REALIZACJI);
+            if(Application.Current.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.NavigateToOffersPage();
+            }
         }
 
         private void ReadyFilterClick(object sender, RoutedEventArgs e)
         {
             Filter(OfferStatus.GOTOWA);
+            if(Application.Current.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.NavigateToOffersPage();
+            }
+
         }
         private void FinishedFilterClick(object sender, RoutedEventArgs e)
         {
             Filter(OfferStatus.ZAKONCZONA);
+            if(Application.Current.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.NavigateToOffersPage();
+            }
         }
 
         private void ClearFilterClick(object sender, RoutedEventArgs e)

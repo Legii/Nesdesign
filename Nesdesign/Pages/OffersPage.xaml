@@ -13,19 +13,47 @@
 
     <Page.Resources>
         <Style TargetType="ComboBox">
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Width" Value="Auto"/>
             <Setter Property="MinWidth" Value="120"/>
             <Setter Property="Height" Value="Auto"/>
 
         </Style>
-          
-        
+
+        <Style TargetType="TextBox">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="DataGridCell">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
 
         <Style TargetType="DataGridCell" x:Key="Callback">
             <EventSetter Event="PreviewMouseRightButtonDown"
                                  Handler="RightClick"/>
         </Style>
+
+
+        <Style x:Key="DG_TextBlock_Centered" TargetType="TextBlock">
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="2"/>
+        </Style>
+
+        <Style x:Key="DG_TextBox_Centered" TargetType="TextBox">
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="2"/>
+        </Style>
+
+
+
 
         <DataTemplate x:Key="ButtonA">
             <Button Content="Stwórz zamówienie"
@@ -127,7 +155,7 @@
                   Margin="10,0,0,0"/>
             
             <Label Content="Filtruj" Grid.Column="2"></Label>
-            <TextBox Grid.Column="3" Text="{Binding FilterPattern}" MinWidth="200" Height="30" x:Name="TxtIdFilter" />
+            <TextBox Grid.Column="3" Text="{Binding FilterPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="200" Height="30" x:Name="TxtIdFilter" VerticalContentAlignment="Center" TextAlignment="Center"/>
 
             <!--Filtruj klient-->
             <Label Content="Filtruj klienta" Grid.Column="5"></Label>
@@ -153,8 +181,8 @@
             <Button x:Name="ClearFiltersButton" Content="Wyczyść Filtry" Grid.Column="11" Padding="0" Width="100" Height="30" Click="ClearFiltersButton_Click"></Button>
 
             <!--Całkowita wartość projektów-->
-            <Label Content="Całkowita wartość:" Grid.Column="13"></Label>
-            <TextBlock Grid.Column="14" Text="{Binding TotalSum}" FontWeight="Bold" Foreground="DarkGreen" Height="30" FontSize="18" VerticalAlignment="Center"/>
+            <Label Content="Całkowita wartość:" Grid.Column="13" x:Name="LabelTotalSum"></Label>
+            <TextBlock Grid.Column="14" Text="{Binding TotalSum}" FontWeight="Bold" Foreground="DarkGreen" Height="30" FontSize="18" VerticalAlignment="Center" x:Name="TextboxTotalSum"/>
 
         </Grid>
 
@@ -179,11 +207,11 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="*" Binding="{Binding AllInfo,  UpdateSourceTrigger=PropertyChanged}"  IsReadOnly="True" MinWidth="40" 
-                                        CellStyle="{StaticResource Callback}"/>
+                  
 
-                    <DataGridTextColumn Header="Nr oferty / zapytania" Binding="{Binding OfferId}"  MinWidth="80" 
-                                        CellStyle="{StaticResource Callback}"/>
+                    <DataGridTextColumn Header="Nr oferty / zapytania" Binding="{Binding OfferId}" 
+                                        CellStyle="{StaticResource Callback}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
+    EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -195,9 +223,12 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="Opis"  MinWidth="250" Binding="{Binding Description}"/>
-                    <DataGridTextColumn Header="Ilość" MinWidth="40" Binding="{Binding Quantity}"/>
-                    <DataGridTextColumn Header="Nazwa / numer" MinWidth="100" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Opis"  Binding="{Binding Description}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
+    EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
+                    <DataGridTextColumn Header="Ilość" MinWidth="40" Binding="{Binding Quantity}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
+    EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
+                    <DataGridTextColumn Header="Nazwa / numer" Binding="{Binding Name}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
+    EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
 
                     
                     <!-- Offer client selection -->
@@ -231,17 +262,18 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Nr zamówienia"
-                                    CellTemplateSelector="{StaticResource OfferButtonSelector}" MinWidth="140"/>
+                                    CellTemplateSelector="{StaticResource OfferButtonSelector}"/>
 
                     <local:MyTemplateColumn Header="Konstrukcja"
-                     CellTemplateSelector="{StaticResource ProjectButtonSelector}"  ColumnKey="construction" MinWidth="140"/>
+                     CellTemplateSelector="{StaticResource ProjectButtonSelector}"  ColumnKey="construction" />
 
                     <local:MyTemplateColumn Header="Produkcja"
-                     CellTemplateSelector="{StaticResource ProjectButtonSelector}" ColumnKey="production" MinWidth="140"/>
+                     CellTemplateSelector="{StaticResource ProjectButtonSelector}" ColumnKey="production" />
 
-                    <DataGridTextColumn Header="Kto" Binding="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="100"></DataGridTextColumn>
-                    <DataGridCheckBoxColumn Header="Wysyłka" Binding="{Binding Shipment, Mode=TwoWay}" MinWidth="80"/>
-                    <DataGridTemplateColumn Header="Termin wykonania" MinWidth="160">
+                    <DataGridTextColumn Header="Kto" Binding="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
+    EditingElementStyle="{StaticResource DG_TextBox_Centered}" ></DataGridTextColumn>
+                    <DataGridCheckBoxColumn Header="Wysyłka" Binding="{Binding Shipment, Mode=TwoWay}"/>
+                    <DataGridTemplateColumn Header="Termin wykonania">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -252,7 +284,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="Termin dostawy" MinWidth="160">
+                    <DataGridTemplateColumn Header="Termin dostawy" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -266,12 +298,13 @@
           
                     <DataGridTextColumn Header="Nr faktury"
                                         Binding="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        MinWidth="160"
+                                       
                                         CellStyle="{StaticResource Callback}"
                                         x:Name="InvoiceColumn"
                                        />
 
-                    <DataGridTextColumn Header="Kwota [zł]"           MinWidth="160" x:Name="PriceColumn">
+                    <DataGridTextColumn Header="Kwota [zł]"           x:Name="PriceColumn"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
+    EditingElementStyle="{StaticResource DG_TextBox_Centered}">
                         <DataGridTextColumn.Binding>
                             <Binding Path="Price" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource IntToStringConverter}" />
                         </DataGridTextColumn.Binding>

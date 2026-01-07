@@ -6,7 +6,9 @@ namespace Nesdesign.Models
 {
         public enum OfferStatus
         {
-            [System.ComponentModel.Description("nie ofertowana")]
+            [System.ComponentModel.Description("Utworzona")]
+            UTWORZONA,
+            [System.ComponentModel.Description("Nie ofertowana")]
             NIE_OFERTOWANA,
             [System.ComponentModel.Description("Oferta mailowa")]
             OFERTA_MAILOWA,
