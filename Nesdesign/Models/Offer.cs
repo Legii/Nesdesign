@@ -108,7 +108,7 @@ namespace Nesdesign.Models
         public string DaysLeftToDate2 => (Date2.HasValue) ? "(" + (Date2.Value - DateTime.Now).Days + " dni)" : "";
 
         [NotMapped]
-        public string AllInfo => $"{OfferId} {Description} {orderNumber} {name} {orderPath} ";
+        public string AllInfo => $"{OfferId} {Description} {orderNumber} {name} {orderPath} {projectPath} ";
 
         public string statusString => StringHandler.GetEnumString(this.Status);
 

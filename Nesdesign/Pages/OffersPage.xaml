@@ -12,6 +12,11 @@
 >
 
     <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="Auto"></Setter>
+            <Setter Property="Padding" Value="0"></Setter>
+        </Style>
+        
         <Style TargetType="ComboBox">
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Width" Value="Auto"/>
@@ -31,6 +36,7 @@
             <Setter Property="TextAlignment" Value="Center"/>
         </Style>
         <Style TargetType="DataGridCell">
+            <Setter Property="MaxWidth" Value="350"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
@@ -58,11 +64,13 @@
         <DataTemplate x:Key="ButtonA">
             <Button Content="Stwórz zamówienie"
                 Background="LightCoral"
+                Width="Auto"
                 Click="CreateOrderCLick"  />
         </DataTemplate>
 
         <DataTemplate x:Key="ButtonB">
             <Button Content="{Binding OrderNumber}"
+                    Width="Auto"
                 Click="OpenOrderFolderClick" PreviewMouseRightButtonDown="RightClick">
              
 
@@ -71,7 +79,7 @@
 
         <DataTemplate x:Key="addProjectButton">
             <Button Content="Dodaj" x:Name="AddProjectButton"
-                Background="DeepSkyBlue"
+                Background="DeepSkyBlue" Width="Auto"
                 Click="addProject"
                      Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell},
                           Path=Column.(local:MyTemplateColumn.ColumnKey)}"/>
@@ -79,7 +87,7 @@
 
         <DataTemplate x:Key="openFolderButton">
             <Button Content="{Binding projectPath}" x:Name="OpenProjectFolderButton"
-            Background="LimeGreen"
+            Background="LimeGreen"  Width="Auto"
                      Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell},
       Path=Column.(local:MyTemplateColumn.ColumnKey)}"
             Click="OpenOrderFolderClick" PreviewMouseRightButtonDown="RightClick">
@@ -187,7 +195,7 @@
         </Grid>
 
 
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" MinHeight="700" MaxHeight="750"   HorizontalAlignment="Center" VerticalAlignment="Top">
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" MinHeight="700" MaxHeight="750"    HorizontalAlignment="Center" VerticalAlignment="Top">
             <DataGrid x:Name="OffersDataGrid"
                       ItemsSource="{Binding Offers}"
                       CanUserAddRows="False"
@@ -222,9 +230,15 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-
-                    <DataGridTextColumn Header="Opis"  Binding="{Binding Description}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
-    EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
+                    <DataGridTemplateColumn Header="Opis" MaxWidth="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+           
+                                        <TextBox Text="{Binding Description}" TextWrapping="Wrap" Height="150" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" MaxHeight="100"></TextBox>
+                            
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Ilość" MinWidth="40" Binding="{Binding Quantity}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
     EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
                     <DataGridTextColumn Header="Nazwa / numer" Binding="{Binding Name}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
@@ -254,6 +268,7 @@
                                 <ComboBox
                                     ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValues} }"
                                     DisplayMemberPath="Description"
+                                    
                                     SelectedValuePath="Value"
                                     SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     IsEditable="False"
