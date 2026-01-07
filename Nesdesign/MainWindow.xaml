@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nesdesign"
         mc:Ignorable="d"
-        Title="Nesdesign" Height="800" Width="1200" MinWidth="1000" MinHeight="1000"
+        Title="Nesdesign" Height="800" Width="1200" MinWidth="600" MinHeight="400"
         WindowState="Maximized">
 
     <Window.Resources>
@@ -25,16 +25,22 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <!-- Navigation Panel -->
-        <StackPanel Grid.Column="0" Background="#333" Width="150" >
+        <Grid  Background="#333">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Column="0" Width="150" >
             <Button Content="Zapytania i projekty" Click="OffersClick" Margin="5"/>
             <Button Content="Klienci" Click="ClientsClick" Margin="5"/>
             <Button Content="Kreator" Background="LightBlue" Click="CreatorClick" Margin="5"/>
-            <Button Content="Ustawienia" Margin="5,200,0,0" Click="SettingsClick">
-                
-            </Button>
+       
         </StackPanel>
+            <Button Content="Ustawienia" Grid.Row="1"  Click="SettingsClick" Margin="5"/>
+        </Grid>
 
-        <!-- Content Area -->
+                <!-- Content Area -->
         <Frame  Grid.Column="1" x:Name="MainFrame" NavigationUIVisibility="Hidden" />
     </Grid>
 

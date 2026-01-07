@@ -63,7 +63,7 @@
 
         <DataTemplate x:Key="ButtonA">
             <Button Content="Stwórz zamówienie"
-                Background="LightCoral"
+               
                 Width="Auto"
                 Click="CreateOrderCLick"  />
         </DataTemplate>
@@ -79,7 +79,7 @@
 
         <DataTemplate x:Key="addProjectButton">
             <Button Content="Dodaj" x:Name="AddProjectButton"
-                Background="DeepSkyBlue" Width="Auto"
+                 Width="Auto"
                 Click="addProject"
                      Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell},
                           Path=Column.(local:MyTemplateColumn.ColumnKey)}"/>
@@ -87,7 +87,7 @@
 
         <DataTemplate x:Key="openFolderButton">
             <Button Content="{Binding projectPath}" x:Name="OpenProjectFolderButton"
-            Background="LimeGreen"  Width="Auto"
+              Width="Auto"
                      Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell},
       Path=Column.(local:MyTemplateColumn.ColumnKey)}"
             Click="OpenOrderFolderClick" PreviewMouseRightButtonDown="RightClick">
@@ -108,7 +108,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
 
-       <local:IntToStringConverter x:Key="IntToStringConverter" />
+       <local:DecimalToStringConverter x:Key="DecimalToStringConverter" />
  
 
 
@@ -195,7 +195,7 @@
         </Grid>
 
 
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" MinHeight="700" MaxHeight="750"    HorizontalAlignment="Center" VerticalAlignment="Top">
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible"   HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10">
             <DataGrid x:Name="OffersDataGrid"
                       ItemsSource="{Binding Offers}"
                       CanUserAddRows="False"
@@ -241,10 +241,22 @@
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Ilość" MinWidth="40" Binding="{Binding Quantity}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
     EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
-                    <DataGridTextColumn Header="Nazwa / numer" Binding="{Binding Name}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
-    EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
 
-                    
+
+                    <DataGridTemplateColumn Header="Numer / nazwa">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Auto"
+                PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+
                     <!-- Offer client selection -->
                     <DataGridTemplateColumn Header="Klient">
                         <DataGridTemplateColumn.CellTemplate>
@@ -287,7 +299,7 @@
 
                     <DataGridTextColumn Header="Kto" Binding="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
     EditingElementStyle="{StaticResource DG_TextBox_Centered}" ></DataGridTextColumn>
-                    <DataGridCheckBoxColumn Header="Wysyłka" Binding="{Binding Shipment, Mode=TwoWay}"/>
+
                     <DataGridTemplateColumn Header="Termin wykonania">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -321,7 +333,7 @@
                     <DataGridTextColumn Header="Kwota [zł]"           x:Name="PriceColumn"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
     EditingElementStyle="{StaticResource DG_TextBox_Centered}">
                         <DataGridTextColumn.Binding>
-                            <Binding Path="Price" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource IntToStringConverter}" />
+                            <Binding Path="Price" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource DecimalToStringConverter}" />
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
 
@@ -362,7 +374,7 @@
                                 <Setter Property="Background" Value="#555555"/>
                             </MultiDataTrigger>
 
-                            <DataTrigger Binding="{Binding Shipment}" Value="True">
+                            <DataTrigger Binding="{Binding Status}" Value="{x:Static models:OfferStatus.GOTOWA}">
                                 <Setter Property="Background" Value="LightGreen"/>
                             </DataTrigger>
                         </Style.Triggers>

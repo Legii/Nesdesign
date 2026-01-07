@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Nesdesign
 {
@@ -134,5 +135,18 @@ namespace Nesdesign
         {
             this.viewModel.ClearFilters();
         }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                e.Handled = false; // allow newline
+            }
+            else if (e.Key == Key.Enter)
+            {
+                e.Handled = true; // prevent default DataGrid behavior
+            }
+        }
+
     }
 }

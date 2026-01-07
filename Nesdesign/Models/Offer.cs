@@ -78,7 +78,7 @@ namespace Nesdesign.Models
 
         [ObservableProperty]
         [Column("price")]
-        private int? price =100;
+        private decimal? price =100;
 
         [ObservableProperty]
         [Column("shipment")]
