@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Nesdesign
 {
@@ -148,5 +149,43 @@ namespace Nesdesign
             }
         }
 
+        // Handler pozwalający:
+        // - odznaczyć wiersz klikając ponownie w zaznaczony wiersz
+        // - wyczyścić zaznaczenie klikając w puste miejsce DataGrid
+        private void OffersDataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var dep = (DependencyObject)e.OriginalSource;
+
+            var row = FindVisualParent<DataGridRow>(dep);
+
+            if (row == null)
+            {
+                // kliknięcie w puste miejsce DataGrid => wyczyść zaznaczenie
+                OffersDataGrid.UnselectAll();
+                return;
+            }
+
+            // jeśli kliknięto już zaznaczony wiersz — odznacz go i przerwij dalsze przetwarzanie
+            if (row.IsSelected)
+            {
+                OffersDataGrid.UnselectAll();
+                e.Handled = true;
+            }
+            // w przeciwnym razie pozwól standardowemu zachowaniu zaznaczenia
+        }
+
+        // helper do przeszukiwania drzewa wizualnego w górę
+        private static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            if (child == null) return null;
+            DependencyObject current = child;
+            while (current != null)
+            {
+                if (current is T correctlyTyped)
+                    return correctlyTyped;
+                current = VisualTreeHelper.GetParent(current);
+            }
+            return null;
+        }
     }
 }

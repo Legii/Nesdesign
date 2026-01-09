@@ -1,362 +1,481 @@
-﻿<Page x:Class="Nesdesign.OffersPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Nesdesign"
-      xmlns:models="clr-namespace:Nesdesign.Models"
-      xmlns:selectors="clr-namespace:Nesdesign.TemplateSelectors"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="Zapytania"
->
+﻿<Page
+    x:Class="Nesdesign.OffersPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Nesdesign"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Nesdesign.Models"
+    xmlns:selectors="clr-namespace:Nesdesign.TemplateSelectors"
+    Title="Zapytania"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
 
     <Page.Resources>
         <Style TargetType="Button">
-            <Setter Property="Width" Value="Auto"></Setter>
-            <Setter Property="Padding" Value="0"></Setter>
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="Padding" Value="0" />
         </Style>
-        
+
         <Style TargetType="ComboBox">
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Width" Value="Auto"/>
-            <Setter Property="MinWidth" Value="120"/>
-            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="Height" Value="Auto" />
 
         </Style>
 
         <Style TargetType="TextBox">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
 
         <Style TargetType="TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
         </Style>
         <Style TargetType="DataGridCell">
-            <Setter Property="MaxWidth" Value="350"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="MaxWidth" Value="350" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
 
-        <Style TargetType="DataGridCell" x:Key="Callback">
-            <EventSetter Event="PreviewMouseRightButtonDown"
-                                 Handler="RightClick"/>
-        </Style>
+
 
 
         <Style x:Key="DG_TextBlock_Centered" TargetType="TextBlock">
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="2"/>
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="2" />
         </Style>
 
         <Style x:Key="DG_TextBox_Centered" TargetType="TextBox">
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="2"/>
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="2" />
         </Style>
 
 
 
 
         <DataTemplate x:Key="ButtonA">
-            <Button Content="Stwórz zamówienie"
-               
+            <Button
                 Width="Auto"
-                Click="CreateOrderCLick"  />
+                Click="CreateOrderCLick"
+                Content="Stwórz zamówienie" />
         </DataTemplate>
 
         <DataTemplate x:Key="ButtonB">
-            <Button Content="{Binding OrderNumber}"
-                    Width="Auto"
-                Click="OpenOrderFolderClick" PreviewMouseRightButtonDown="RightClick">
-             
-
-            </Button>
+            <Button
+                Width="Auto"
+                Click="OpenOrderFolderClick"
+                Content="{Binding OrderNumber}"
+                PreviewMouseRightButtonDown="RightClick" />
         </DataTemplate>
 
         <DataTemplate x:Key="addProjectButton">
-            <Button Content="Dodaj" x:Name="AddProjectButton"
-                 Width="Auto"
+            <Button
+                x:Name="AddProjectButton"
+                Width="Auto"
                 Click="addProject"
-                     Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell},
-                          Path=Column.(local:MyTemplateColumn.ColumnKey)}"/>
+                Content="Dodaj"
+                Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Path=Column.(local:MyTemplateColumn.ColumnKey)}" />
         </DataTemplate>
 
         <DataTemplate x:Key="openFolderButton">
-            <Button Content="{Binding projectPath}" x:Name="OpenProjectFolderButton"
-              Width="Auto"
-                     Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell},
-      Path=Column.(local:MyTemplateColumn.ColumnKey)}"
-            Click="OpenOrderFolderClick" PreviewMouseRightButtonDown="RightClick">
-              
-            </Button>
+            <Button
+                x:Name="OpenProjectFolderButton"
+                Width="Auto"
+                Click="OpenOrderFolderClick"
+                Content="{Binding projectPath}"
+                PreviewMouseRightButtonDown="RightClick"
+                Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Path=Column.(local:MyTemplateColumn.ColumnKey)}" />
         </DataTemplate>
 
         <selectors:OfferButtonTemplateSelector
-        x:Key="OfferButtonSelector"
-        TemplateA="{StaticResource ButtonA}"
-        TemplateB="{StaticResource ButtonB}" />
+            x:Key="OfferButtonSelector"
+            TemplateA="{StaticResource ButtonA}"
+            TemplateB="{StaticResource ButtonB}" />
 
         <selectors:ProjectButtonTemplateSelector
-        x:Key="ProjectButtonSelector"
-        TemplateA="{StaticResource addProjectButton}"
-        TemplateB="{StaticResource openFolderButton}" />
+            x:Key="ProjectButtonSelector"
+            TemplateA="{StaticResource addProjectButton}"
+            TemplateB="{StaticResource openFolderButton}" />
 
-        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
 
-       <local:DecimalToStringConverter x:Key="DecimalToStringConverter" />
- 
+        <local:DecimalToStringConverter x:Key="DecimalToStringConverter" />
+
 
 
 
 
     </Page.Resources>
 
-   
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Checkbox sterujący widocznością kolumn faktury/kwoty -->
+        <!--  Checkbox sterujący widocznością kolumn faktury/kwoty  -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <!--Checkbox-->
-                <ColumnDefinition Width="Auto"/>
-                <!--Margin-->
-                <ColumnDefinition Width="50"/>
-                <!--Filter Textbox-->
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <!--Margin-->
-                <ColumnDefinition Width="50"/>
-                <!---Filter client-->
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <!--Margin-->
-                <ColumnDefinition Width="50"/>
-                <!--Filter status-->
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <!--Margin-->
-                <ColumnDefinition Width="50"/>
-                <!--ClearFilters-->
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <!--Margin-->
-                <ColumnDefinition Width="50"/>
-                <!--Total sum-->
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <!--  Checkbox  -->
+                <ColumnDefinition Width="Auto" />
+                <!--  Margin  -->
+                <ColumnDefinition Width="50" />
+                <!--  Filter Textbox  -->
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <!--  Margin  -->
+                <ColumnDefinition Width="50" />
+                <!--  -Filter client  -->
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <!--  Margin  -->
+                <ColumnDefinition Width="50" />
+                <!--  Filter status  -->
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <!--  Margin  -->
+                <ColumnDefinition Width="50" />
+                <!--  ClearFilters  -->
+                <ColumnDefinition Width="Auto" />
+                <!--  Margin  -->
+                <ColumnDefinition Width="50" />
+                <!--  Total sum  -->
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
 
-            <CheckBox Grid.Column="0"
-                  Content="WIĘCEJ"
-                  IsChecked="{Binding ShowPaymentData, Mode=TwoWay}"
-                  VerticalAlignment="Center"
-                  HorizontalAlignment="Left"
-                  Margin="10,0,0,0"/>
-            
-            <Label Content="Filtruj" Grid.Column="2"></Label>
-            <TextBox Grid.Column="3" Text="{Binding FilterPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="200" Height="30" x:Name="TxtIdFilter" VerticalContentAlignment="Center" TextAlignment="Center"/>
+            <CheckBox
+                Grid.Column="0"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="WIĘCEJ"
+                IsChecked="{Binding ShowPaymentData, Mode=TwoWay}" />
 
-            <!--Filtruj klient-->
-            <Label Content="Filtruj klienta" Grid.Column="5"></Label>
+            <Label Grid.Column="2" Content="Filtruj" />
+            <TextBox
+                x:Name="TxtIdFilter"
+                Grid.Column="3"
+                Height="30"
+                MinWidth="200"
+                VerticalContentAlignment="Center"
+                Text="{Binding FilterPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                TextAlignment="Center" />
+
+            <!--  Filtruj klient  -->
+            <Label Grid.Column="5" Content="Filtruj klienta" />
             <ComboBox
-            Grid.Column="6" Margin="10,0,0,0"
-            ItemsSource="{Binding ClientsModel.Clients}"
-             DisplayMemberPath="Name"
-             SelectedValuePath="ClientId"
-             SelectedValue="{Binding FilteredClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-             IsEditable="False"/>
+                Grid.Column="6"
+                Margin="10,0,0,0"
+                DisplayMemberPath="Name"
+                IsEditable="False"
+                ItemsSource="{Binding ClientsModel.Clients}"
+                SelectedValue="{Binding FilteredClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValuePath="ClientId" />
 
 
-            <!--Filtruj STATUS-->
-            <Label Content="Filtruj status" Grid.Column="8"></Label>
+            <!--  Filtruj STATUS  -->
+            <Label Grid.Column="8" Content="Filtruj status" />
             <ComboBox
-            Grid.Column="9" Margin="10,0,0,0"
-     ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValuesPlusNull} }"
-     DisplayMemberPath="Description"
-     SelectedValuePath="Value"
-     SelectedValue="{Binding FilteredStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-     IsEditable="False"
-     />
-            <Button x:Name="ClearFiltersButton" Content="Wyczyść Filtry" Grid.Column="11" Padding="0" Width="100" Height="30" Click="ClearFiltersButton_Click"></Button>
+                Grid.Column="9"
+                Margin="10,0,0,0"
+                DisplayMemberPath="Description"
+                IsEditable="False"
+                ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValuesPlusNull}}"
+                SelectedValue="{Binding FilteredStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValuePath="Value" />
+            <Button
+                x:Name="ClearFiltersButton"
+                Grid.Column="11"
+                Width="100"
+                Height="30"
+                Padding="0"
+                Click="ClearFiltersButton_Click"
+                Content="Wyczyść Filtry" />
 
-            <!--Całkowita wartość projektów-->
-            <Label Content="Całkowita wartość:" Grid.Column="13" x:Name="LabelTotalSum"></Label>
-            <TextBlock Grid.Column="14" Text="{Binding TotalSum}" FontWeight="Bold" Foreground="DarkGreen" Height="30" FontSize="18" VerticalAlignment="Center" x:Name="TextboxTotalSum"/>
+            <!--  Całkowita wartość projektów  -->
+            <Label
+                x:Name="LabelTotalSum"
+                Grid.Column="13"
+                Content="Całkowita wartość:" />
+            <TextBlock
+                x:Name="TextboxTotalSum"
+                Grid.Column="14"
+                Height="30"
+                VerticalAlignment="Center"
+                FontSize="18"
+                FontWeight="Bold"
+                Foreground="DarkGreen"
+                Text="{Binding TotalSum}" />
 
         </Grid>
 
 
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible"   HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10">
-            <DataGrid x:Name="OffersDataGrid"
-                      ItemsSource="{Binding Offers}"
-                      CanUserAddRows="False"
-                      AutoGenerateColumns="False"
-                      CanUserSortColumns="True"
-                      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                      SelectionUnit="FullRow">
-                
-           
+        <ScrollViewer
+            Grid.Row="1"
+            Padding="10"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            HorizontalScrollBarVisibility="Visible">
+            <DataGrid
+                x:Name="OffersDataGrid"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserSortColumns="True"
+                ItemsSource="{Binding Offers}"
+                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                SelectionUnit="FullRow"
+                PreviewMouseLeftButtonDown="OffersDataGrid_PreviewMouseLeftButtonDown">
+
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                       
+                    </Style>
+                    <Style x:Key="Callback" TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                        <EventSetter Event="PreviewMouseRightButtonDown" Handler="RightClick" />
+                    </Style>
+                </DataGrid.Resources>
+
+
                 <DataGrid.Columns>
                     <DataGridTemplateColumn MinWidth="20">
+                        <DataGridTemplateColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},
+                                               Path=IsSelected}"
+                             Value="True">
+                                        <Setter Property="Background" Value="#E3F2FD"/>
+                                        <Setter Property="BorderBrush" Value="#2196F3"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTemplateColumn.CellStyle>
+
+                        
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <RadioButton
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
                                     GroupName="SelectRow"
-                                    IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=TwoWay}"/>
+                                    IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=TwoWay}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                  
 
-                    <DataGridTextColumn Header="Nr oferty / zapytania" Binding="{Binding OfferId}" 
-                                        CellStyle="{StaticResource Callback}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
-    EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
+
+                    <DataGridTextColumn
+                        Binding="{Binding OfferId}"
+                        CellStyle="{StaticResource Callback}"
+                        EditingElementStyle="{StaticResource DG_TextBox_Centered}"
+                        ElementStyle="{StaticResource DG_TextBlock_Centered}"
+                        Header="Nr oferty / zapytania" />
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Width="80" Height="80" Click="OpenImage">
-                                    <Image Stretch="Uniform"
-                                           Source="{Binding Photo}"/>
+                                <Button
+                                    Width="80"
+                                    Height="80"
+                                    Click="OpenImage">
+                                    <Image Source="{Binding Photo}" Stretch="Uniform" />
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Opis" MaxWidth="200">
+                    <DataGridTemplateColumn MaxWidth="200" Header="Opis">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-           
-                                        <TextBox Text="{Binding Description}" TextWrapping="Wrap" Height="150" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" MaxHeight="100"></TextBox>
-                            
+
+                                <TextBox
+                                    Height="150"
+                                    MaxHeight="100"
+                                    ScrollViewer.CanContentScroll="True"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    Text="{Binding Description}"
+                                    TextWrapping="Wrap" />
+
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Ilość" MinWidth="40" Binding="{Binding Quantity}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
-    EditingElementStyle="{StaticResource DG_TextBox_Centered}"/>
+                    <DataGridTextColumn
+                        MinWidth="40"
+                        Binding="{Binding Quantity}"
+                        EditingElementStyle="{StaticResource DG_TextBox_Centered}"
+                        ElementStyle="{StaticResource DG_TextBlock_Centered}"
+                        Header="Ilość" />
 
 
                     <DataGridTemplateColumn Header="Numer / nazwa">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox
-                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
-                AcceptsReturn="True"
-                TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Auto"
-                PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                                    AcceptsReturn="True"
+                                    PreviewKeyDown="TextBox_PreviewKeyDown"
+                                    Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                    TextWrapping="Wrap"
+                                    VerticalScrollBarVisibility="Auto" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
 
-                    <!-- Offer client selection -->
+                    <!--  Offer client selection  -->
                     <DataGridTemplateColumn Header="Klient">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox
-                                    ItemsSource="{Binding DataContext.ClientsModel.Clients, RelativeSource={RelativeSource AncestorType=Page}}"
                                     DisplayMemberPath="Name"
-                                    SelectedValuePath="ClientId"
-                                    SelectedValue="{Binding ClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     IsEditable="False"
-                                    />
-                      
+                                    ItemsSource="{Binding DataContext.ClientsModel.Clients, RelativeSource={RelativeSource AncestorType=Page}}"
+                                    SelectedValue="{Binding ClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValuePath="ClientId" />
+
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    
-                    <!--Offer status selection-->
-                    <DataGridTemplateColumn Header="Status"   MinWidth="150">
+
+                    <!--  Offer status selection  -->
+                    <DataGridTemplateColumn MinWidth="150" Header="Status">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox
-                                    ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValues} }"
                                     DisplayMemberPath="Description"
-                                    
-                                    SelectedValuePath="Value"
-                                    SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     IsEditable="False"
-                                    />
+                                    ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValues}}"
+                                    SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValuePath="Value" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Nr zamówienia"
-                                    CellTemplateSelector="{StaticResource OfferButtonSelector}"/>
+                    <DataGridTemplateColumn CellTemplateSelector="{StaticResource OfferButtonSelector}" Header="Nr zamówienia" />
 
-                    <local:MyTemplateColumn Header="Konstrukcja"
-                     CellTemplateSelector="{StaticResource ProjectButtonSelector}"  ColumnKey="construction" />
+                    <local:MyTemplateColumn
+                        CellTemplateSelector="{StaticResource ProjectButtonSelector}"
+                        ColumnKey="construction"
+                        Header="Konstrukcja" />
 
-                    <local:MyTemplateColumn Header="Produkcja"
-                     CellTemplateSelector="{StaticResource ProjectButtonSelector}" ColumnKey="production" />
+                    <local:MyTemplateColumn
+                        CellTemplateSelector="{StaticResource ProjectButtonSelector}"
+                        ColumnKey="production"
+                        Header="Produkcja" />
 
-                    <DataGridTextColumn Header="Kto" Binding="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
-    EditingElementStyle="{StaticResource DG_TextBox_Centered}" ></DataGridTextColumn>
+                    <DataGridTextColumn
+                        Binding="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        EditingElementStyle="{StaticResource DG_TextBox_Centered}"
+                        ElementStyle="{StaticResource DG_TextBlock_Centered}"
+                        Header="Kto" />
 
                     <DataGridTemplateColumn Header="Termin wykonania">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <DatePicker SelectedDate="{Binding Date1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <Label Content="{Binding DaysLeftToDate1}"/>
+                                    <Label Content="{Binding DaysLeftToDate1}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="Termin dostawy" >
+                    <DataGridTemplateColumn Header="Termin dostawy">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <DatePicker SelectedDate="{Binding Date2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <Label Content="{Binding DaysLeftToDate2}"/>
+                                    <Label Content="{Binding DaysLeftToDate2}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-          
-                    <DataGridTextColumn Header="Nr faktury"
-                                        Binding="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                       
-                                        CellStyle="{StaticResource Callback}"
-                                        x:Name="InvoiceColumn"
-                                       />
 
-                    <DataGridTextColumn Header="Kwota [zł]"           x:Name="PriceColumn"  ElementStyle="{StaticResource DG_TextBlock_Centered}"
-    EditingElementStyle="{StaticResource DG_TextBox_Centered}">
+                    <DataGridTextColumn
+                        x:Name="InvoiceColumn"
+                        Binding="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        CellStyle="{StaticResource Callback}"
+                        Header="Nr faktury" />
+
+                    <DataGridTextColumn
+                        x:Name="PriceColumn"
+                        EditingElementStyle="{StaticResource DG_TextBox_Centered}"
+                        ElementStyle="{StaticResource DG_TextBlock_Centered}"
+                        Header="Kwota [zł]">
                         <DataGridTextColumn.Binding>
-                            <Binding Path="Price" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource DecimalToStringConverter}" />
+                            <Binding
+                                Converter="{StaticResource DecimalToStringConverter}"
+                                Mode="TwoWay"
+                                Path="Price"
+                                UpdateSourceTrigger="PropertyChanged" />
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
 
-                    <DataGridTemplateColumn Header="Status płatności"   MinWidth="150" x:Name="PaymentStatusColumn">
+                    <DataGridTemplateColumn
+                        x:Name="PaymentStatusColumn"
+                        MinWidth="150"
+                        Header="Status płatności">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox
-                ItemsSource="{Binding Source={x:Static models:PaymentStatusEnumValues.AllValues} }"
-                DisplayMemberPath="Description"
-                SelectedValuePath="Value"
-                SelectedValue="{Binding PaymentStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                IsEditable="False"
-                />
+                                    DisplayMemberPath="Description"
+                                    IsEditable="False"
+                                    ItemsSource="{Binding Source={x:Static models:PaymentStatusEnumValues.AllValues}}"
+                                    SelectedValue="{Binding PaymentStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValuePath="Value" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="Zamykanie" MinWidth="160">
+                    <DataGridTemplateColumn Header="Zamykanie">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <CheckBox IsChecked="{Binding Closed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Text="ZAMKNIJ PROJEKT" Margin="5,0,0,0" />
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="Vertical">
+                                    <CheckBox
+                                        HorizontalAlignment="Center"
+                                        HorizontalContentAlignment="Center"
+                                        IsChecked="{Binding Closed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock
+                                        Margin="5,0,0,0"
+                                        Text="ZAMKNIJ&#10;PROJEKT"
+                                        TextWrapping="Wrap" />
+
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -365,37 +484,50 @@
 
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
+                        <!--  Zapobiegamy domyślnemu podświetleniu zaznaczenia  -->
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+
                         <Style.Triggers>
+                            <!--  Ignoruj standardowe podświetlenie przy zaznaczeniu  -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                            </Trigger>
+
+                            <!--  Twoje istniejące reguły zachowane  -->
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding Closed}" Value="True"/>
-                                    <Condition Binding="{Binding Status}" Value="{x:Static models:OfferStatus.ZAKONCZONA}"/>
+                                    <Condition Binding="{Binding Closed}" Value="True" />
+                                    <Condition Binding="{Binding Status}" Value="{x:Static models:OfferStatus.ZAKONCZONA}" />
                                 </MultiDataTrigger.Conditions>
-                                <Setter Property="Background" Value="#555555"/>
+                                <Setter Property="Background" Value="#555555" />
                             </MultiDataTrigger>
 
                             <DataTrigger Binding="{Binding Status}" Value="{x:Static models:OfferStatus.GOTOWA}">
-                                <Setter Property="Background" Value="LightGreen"/>
+                                <Setter Property="Background" Value="LightGreen" />
                             </DataTrigger>
                         </Style.Triggers>
-                       
                     </Style>
-
+                    
                     
                 </DataGrid.RowStyle>
 
 
             </DataGrid>
         </ScrollViewer>
-        <Border x:Name="Overlay"
-                Background="#80000000"
-                Visibility="Collapsed"  Grid.Row="1">
-            <local:NewOrder x:Name="FormPanel"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+        <Border
+            x:Name="Overlay"
+            Grid.Row="1"
+            Background="#80000000"
+            Visibility="Collapsed">
+            <local:NewOrder
+                x:Name="FormPanel"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
         </Border>
 
     </Grid>
- 
+
 
 </Page>
