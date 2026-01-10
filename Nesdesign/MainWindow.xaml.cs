@@ -38,7 +38,7 @@ namespace Nesdesign
                 dbHandler.ConnectToDatabase();
             } catch
             {
-                MessageBox.Show("Nie udało się utworzyć folderu lub połączzyć z bazą danych"); return;
+                MessageBox.Show("Nie udało się utworzyć folderu lub połączyć z bazą danych"); return;
             }
           
             
@@ -108,7 +108,7 @@ namespace Nesdesign
             if(offer != null)
             {
                 string id = offer.OfferId;
-                var result = MessageBox.Show($"Czy usunać ofertę {id}?", "Potwierdź akcję", MessageBoxButton.YesNo);
+                var result = MessageBox.Show($"Czy usunać zapytanie {id}?", "Potwierdź akcję", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
                     WeakReferenceMessenger.Default.Send(new RequestDeleteSelectedOfferMessage());
  
@@ -117,7 +117,7 @@ namespace Nesdesign
                     return;
             } else
             {
-                MessageBox.Show("Nie wybrano żadnej oferty do usuniecia");
+                MessageBox.Show("Nie wybrano żadnego zapytania do usunięcia");
             }
            
         }

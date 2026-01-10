@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -70,13 +71,23 @@ namespace Nesdesign
                 case 2:
                     int year = Int16.Parse(this.YearTextBox.Text);
                     int month = SelectMonth.SelectedIndex + 1;
-                    offerName = CreateOfferId(year, month);
+                    int day = Int16.Parse(this.Day.Text);
+                    offerName = CreateOfferId(year, month, day);
                     break;
 
             }
             return offerName;
         }
 
+        private string CreateOfferId(int year, int month, int day)
+        {
+            
+            string day_ = string.Format("{0:00}", day);
+            string month_ = string.Format("{0:00}", month);
+            string year_ = year.ToString();
+            year_ = year_.Substring(year_.Length - 2);
+            return $"N{day_}{month_}{year_}";
+        }
 
         private void CreateOfferClick(object sender, RoutedEventArgs e)
 
@@ -90,11 +101,11 @@ namespace Nesdesign
             switch (status)
             {
                 case FileOperationStatus.Success:
-                    MessageLabel.Content = "Utworzono pomyślnie projekt: " + offerName;
+                    MessageLabel.Content = "Utworzono pomyślnie zapytanie: " + offerName;
                     break;
                 case FileOperationStatus.AlreadyExists:
-                    MessageLabel.Content = "Oferta o nazwie " + offerName + " już istnieje.";
-                    var result = MessageBox.Show($"Folder oferty o numerze {offerName} już istnieje, czy dodać do bazy?", "Potwierdź operację", MessageBoxButton.OKCancel);
+                    MessageLabel.Content = "Zapytanie o nazwie " + offerName + " już istnieje.";
+                    var result = MessageBox.Show($"Folder zapytania o numerze {offerName} już istnieje, czy dodać do bazy?", "Potwierdź operację", MessageBoxButton.OKCancel);
                     if (result == MessageBoxResult.Cancel)
                         return;
 
@@ -147,7 +158,7 @@ namespace Nesdesign
             bool Continue = false;
             if(status == FileOperationStatus.AlreadyExists)
             {
-                var result = MessageBox.Show($"Folder oferty o numerze {offerName} już istnieje, czy dodać do bazy?", "Potwierdź operację", MessageBoxButton.OKCancel);
+                var result = MessageBox.Show($"Folder zapytania o numerze {offerName} już istnieje, czy dodać do bazy?", "Potwierdź operację", MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.Cancel)
                     return;
                 else Continue = true;
@@ -163,15 +174,15 @@ namespace Nesdesign
                 }
                 catch
                 {
-                    MessageBox.Show("Błąd podczas tworzenia oferty i kopiowania struktury");
+                    MessageBox.Show("Błąd podczas tworzenia zapytania i kopiowania struktury");
                 }
-                MessageBox.Show("Utworzono ofertę: " + offerName);
+                MessageBox.Show("Utworzono zapytanie: " + offerName);
 
             }
             
             else
             {
-                MessageBox.Show("Nie udało się utworzyć oferty: " + offerName);
+                MessageBox.Show("Nie udało się utworzyć zapytania: " + offerName);
             }
         }
 
@@ -356,6 +367,13 @@ namespace Nesdesign
                 mainWindow.NavigateToOffersPage();
             }
         }
+
+        private void PreviewTextInputHandler(object sender, TextCompositionEventArgs e)
+        {
+
+            e.Handled = !e.Text.All(char.IsDigit);
+        }
+
 
     }
 }

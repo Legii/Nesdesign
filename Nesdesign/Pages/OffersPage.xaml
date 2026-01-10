@@ -21,7 +21,7 @@
         <Style TargetType="ComboBox">
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Width" Value="Auto" />
-        
+
             <Setter Property="Height" Value="Auto" />
 
         </Style>
@@ -174,8 +174,8 @@
             <!--  Filtruj klient  -->
             <Label Grid.Column="5" Content="Filtruj klienta" />
             <ComboBox
-                MinWidth="120"
                 Grid.Column="6"
+                MinWidth="120"
                 Margin="10,0,0,0"
                 DisplayMemberPath="Name"
                 IsEditable="False"
@@ -188,8 +188,8 @@
             <Label Grid.Column="8" Content="Filtruj status" />
             <ComboBox
                 Grid.Column="9"
-                Margin="10,0,0,0"
                 MinWidth="120"
+                Margin="10,0,0,0"
                 DisplayMemberPath="Description"
                 IsEditable="False"
                 ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValuesPlusNull}}"
@@ -232,38 +232,36 @@
                 x:Name="OffersDataGrid"
                 AutoGenerateColumns="False"
                 CanUserAddRows="False"
+                CanUserDeleteRows="False"
                 CanUserSortColumns="True"
                 ItemsSource="{Binding Offers}"
+                PreviewMouseLeftButtonDown="OffersDataGrid_PreviewMouseLeftButtonDown"
                 SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                SelectionUnit="FullRow"
-                PreviewMouseLeftButtonDown="OffersDataGrid_PreviewMouseLeftButtonDown">
+                SelectionUnit="FullRow">
 
                 <DataGrid.Resources>
                     <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="BorderBrush" Value="Transparent"/>
-                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="Foreground" Value="Black" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>
 
                     <Style TargetType="DataGridRow">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <EventSetter Event="PreviewMouseRightButtonDown" Handler="RightClick" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
                             </Trigger>
                         </Style.Triggers>
-                       
-                    </Style>
-                    <Style x:Key="Callback" TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                        <EventSetter Event="PreviewMouseRightButtonDown" Handler="RightClick" />
                     </Style>
                 </DataGrid.Resources>
 
@@ -272,22 +270,20 @@
                     <DataGridTemplateColumn MinWidth="20">
                         <DataGridTemplateColumn.CellStyle>
                             <Style TargetType="DataGridCell">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="BorderBrush" Value="Transparent"/>
-                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="1" />
 
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},
-                                               Path=IsSelected}"
-                             Value="True">
-                                        <Setter Property="Background" Value="#E3F2FD"/>
-                                        <Setter Property="BorderBrush" Value="#2196F3"/>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
+                                        <Setter Property="Background" Value="#E3F2FD" />
+                                        <Setter Property="BorderBrush" Value="#2196F3" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </DataGridTemplateColumn.CellStyle>
 
-                        
+
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <RadioButton
@@ -302,12 +298,18 @@
                     </DataGridTemplateColumn>
 
 
-                    <DataGridTextColumn
-                        Binding="{Binding OfferId}"
-                        CellStyle="{StaticResource Callback}"
-                        EditingElementStyle="{StaticResource DG_TextBox_Centered}"
-                        ElementStyle="{StaticResource DG_TextBlock_Centered}"
-                        Header="Nr oferty / zapytania" />
+                    <DataGridTemplateColumn Header="Nr oferty / zapytania" SortMemberPath="OfferId">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                    Click="OpenOfferFolderClick"
+                                    Content="{Binding OfferId}"
+                                    PreviewMouseRightButtonDown="RightClick" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -385,23 +387,31 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn CellTemplateSelector="{StaticResource OfferButtonSelector}" Header="Nr zamówienia" />
+                    <DataGridTemplateColumn
+                        CellTemplateSelector="{StaticResource OfferButtonSelector}"
+                        Header="Nr zamówienia"
+                        SortMemberPath="OrderNumber" />
 
                     <local:MyTemplateColumn
                         CellTemplateSelector="{StaticResource ProjectButtonSelector}"
                         ColumnKey="construction"
-                        Header="Konstrukcja" />
+                        Header="Konstrukcja"
+                        SortMemberPath="construction" />
 
                     <local:MyTemplateColumn
                         CellTemplateSelector="{StaticResource ProjectButtonSelector}"
                         ColumnKey="production"
-                        Header="Produkcja" />
+                        Header="Produkcja"
+                        SortMemberPath="production" />
 
-                    <DataGridTextColumn
-                        Binding="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        EditingElementStyle="{StaticResource DG_TextBox_Centered}"
-                        ElementStyle="{StaticResource DG_TextBlock_Centered}"
-                        Header="Kto" />
+                    <DataGridTemplateColumn Header="Kto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Text="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
                     <DataGridTemplateColumn Header="Termin wykonania">
                         <DataGridTemplateColumn.CellTemplate>
@@ -426,30 +436,34 @@
                     </DataGridTemplateColumn>
 
 
-                    <DataGridTextColumn
-                        x:Name="InvoiceColumn"
-                        Binding="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        CellStyle="{StaticResource Callback}"
-                        Header="Nr faktury" />
+                    <DataGridTemplateColumn  x:Name="InvoiceColumn" Header="Nr faktury">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Text="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                
 
-                    <DataGridTextColumn
-                        x:Name="PriceColumn"
-                        EditingElementStyle="{StaticResource DG_TextBox_Centered}"
-                        ElementStyle="{StaticResource DG_TextBlock_Centered}"
-                        Header="Kwota [zł]">
-                        <DataGridTextColumn.Binding>
-                            <Binding
-                                Converter="{StaticResource DecimalToStringConverter}"
-                                Mode="TwoWay"
-                                Path="Price"
-                                UpdateSourceTrigger="PropertyChanged" />
-                        </DataGridTextColumn.Binding>
-                    </DataGridTextColumn>
 
                     <DataGridTemplateColumn
-                        x:Name="PaymentStatusColumn"
-         
-                        Header="Status płatności">
+                        x:Name="PriceColumn"
+
+                        Header="Kwota [zł]"
+                        IsReadOnly="False"
+                        SortMemberPath="Price">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Text="{Binding Price, Converter={StaticResource DecimalToStringConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+
+                    </DataGridTemplateColumn>
+
+
+                    <DataGridTemplateColumn x:Name="PaymentStatusColumn" Header="Status płatności">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox
@@ -477,7 +491,6 @@
                                         Margin="5,0,0,0"
                                         Text="ZAMKNIJ&#10;PROJEKT"
                                         TextWrapping="Wrap" />
-
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -497,7 +510,6 @@
                                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
                             </Trigger>
 
-                            <!--  Twoje istniejące reguły zachowane  -->
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
                                     <Condition Binding="{Binding Closed}" Value="True" />
@@ -511,8 +523,6 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                    
-                    
                 </DataGrid.RowStyle>
 
 

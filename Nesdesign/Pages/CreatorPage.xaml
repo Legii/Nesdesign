@@ -67,7 +67,8 @@
 
                 <!-- mały ComboBox ustawiony w tym samym "kolumnowym" lewym wyrównaniu co przyciski -->
                 <StackPanel x:Name="MonthYearPanel" Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Left" Visibility="Collapsed">
-                    <ComboBox Width="161" Height="20" x:Name="SelectMonth">
+                        <TextBox x:Name="Day" Text="1" Width="20" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" PreviewTextInput="PreviewTextInputHandler"></TextBox>
+                    <ComboBox Width="150" Height="20" x:Name="SelectMonth">
                         <ComboBoxItem Content="Styczeń (01)" IsSelected="True"/>
                         <ComboBoxItem Content="Luty (02)"/>
                         <ComboBoxItem Content="Marzec (03)"/>
@@ -82,7 +83,7 @@
                         <ComboBoxItem Content="Grudzień (12)"/>
                     </ComboBox>
 
-                    <TextBox Width="130" Height="20" Margin="10,0,0,0" x:Name="YearTextBox" Text="2026"/>
+                        <TextBox Width="130" Height="20" Margin="10,0,0,0" x:Name="YearTextBox" Text="2026" PreviewTextInput="PreviewTextInputHandler"/>
                 </StackPanel>
 
                 <Button Content="NOWE ZAPYTANIE" Grid.Row="6" HorizontalAlignment="Left" Style="{StaticResource VeryBigButton}" Click="CreateOfferClick"/>

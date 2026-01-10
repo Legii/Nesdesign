@@ -154,6 +154,17 @@ namespace Nesdesign
             }
         }
 
+        private void OpenOfferFolderClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is Offer offer)
+            {
+                string offerPath = offer.OfferId;
+                FileHandler.OpenFolder(offerPath, DIR_TYPE.Offer);
+
+
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -216,8 +227,6 @@ namespace Nesdesign
             return null;
         }
 
-
-
-            
+        
     }
 }

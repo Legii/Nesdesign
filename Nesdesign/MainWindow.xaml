@@ -45,7 +45,7 @@
                     Margin="5"
                     Background="#88aaff"
                     Click="CreateOfferClick"
-                    Content="Utwórz Ofertę"
+                    Content="Nowe zapytanie"
                     Foreground="White" />
             </StackPanel>
             <StackPanel Grid.Row="1">
@@ -54,7 +54,7 @@
                     Margin="5,10,5,10"
                     Background="Red"
                     Click="DeleteOfferButtn_Click"
-                    Content="Usuń ofertę"
+                    Content="Usuń zaznaczone"
                     Foreground="White" />
                 <Button
                     Margin="5"
