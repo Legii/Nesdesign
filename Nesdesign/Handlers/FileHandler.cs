@@ -24,10 +24,10 @@ namespace Nesdesign
         public static SettingsManager settingsManager = SettingsManager.Instance;
         public static String BASE_PATH =>   settingsManager.GetValue("BASE_PATH");
         public static String PROJECTS_PATH => settingsManager.GetValue("PROJECTS_PATH");
-        public static String OFFERS_PATH = settingsManager.GetValue("OFFERS_PATH") + "\\";
-        public static String ORDERS_PATH = settingsManager.GetValue("ORDERS_PATH") + "\\";
-        public static String OFFER_TEMPLATE_PATH = settingsManager.GetValue("OFFER_TEMPLATE_PATH") + "\\";
-        public static String PROJECT_TEMPLATE_PATH = settingsManager.GetValue("OFFER_TEMPLATE_PATH") + "\\" ;
+        public static String OFFERS_PATH = settingsManager.GetValue("OFFERS_PATH");
+        public static String ORDERS_PATH = settingsManager.GetValue("ORDERS_PATH");
+        public static String OFFER_TEMPLATE_PATH = settingsManager.GetValue("OFFER_TEMPLATE_PATH");
+        public static String PROJECT_TEMPLATE_PATH = settingsManager.GetValue("PROJECT_TEMPLATE_PATH");
 
         public static string CreateBasePath(DIR_TYPE dir_type)
         {
@@ -96,13 +96,16 @@ namespace Nesdesign
         public static FileOperationStatus CopyTemplate(string dirname, DIR_TYPE dir_type)
 
         {
-            string basePath = CreateBasePath(dir_type);
 
-            string destinationPath = Path.Join(basePath,dirname);
+            string basePath = CreateBasePath(dir_type);
+            
+            string destinationPath = Path.Join(basePath,dirname + "/");
             string DIR_TEMPLATE = dir_type == DIR_TYPE.Offer ? OFFER_TEMPLATE_PATH : PROJECT_TEMPLATE_PATH;
+            
             try
             {
-                string sourcePath = Path.Join(basePath, DIR_TEMPLATE);
+                string sourcePath = Path.Join(BASE_PATH, DIR_TEMPLATE);
+         
               
                 if (!Directory.Exists(sourcePath))
                 {
@@ -140,7 +143,7 @@ namespace Nesdesign
         {
             string dirPath = CreateBasePath(dir_type);
             string fullPath = dirPath + dirname;
-
+       
             var psi = new ProcessStartInfo
             {
                 FileName = "explorer.exe",

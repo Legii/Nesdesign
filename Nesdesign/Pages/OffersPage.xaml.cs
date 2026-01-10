@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Nesdesign.Models;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,12 +8,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using static Nesdesign.MainWindow;
 
 namespace Nesdesign
 {
     public partial class OffersPage : Page, INotifyPropertyChanged
     {
         OffersViewModel viewModel;
+
+        
       
     
 
@@ -65,9 +69,18 @@ namespace Nesdesign
 
                 }
 
-
+  
 
             };
+            WeakReferenceMessenger.Default.Register<RequestDeleteSelectedOfferMessage>(this, (r, m) =>
+            {
+          
+                OffersDataGrid.CommitEdit(DataGridEditingUnit.Row, true);
+                OffersDataGrid.CancelEdit();
+
+                if (DataContext is OffersViewModel vm)
+                    vm.DeleteSelected();
+            });
 
         }
    
@@ -122,11 +135,26 @@ namespace Nesdesign
             if (sender is Button btn && btn.DataContext is Offer offer)
             {
                 string orderPath = offer.OrderPath;
+        
+                
                 FileHandler.OpenFolder(orderPath, DIR_TYPE.Order);
        
                
             }
         }
+
+        private void OpenProjectFolderClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is Offer offer)
+            {
+                string projectPath = offer.projectPath;
+                FileHandler.OpenFolder(projectPath, DIR_TYPE.Project);
+
+
+            }
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
@@ -187,5 +215,9 @@ namespace Nesdesign
             }
             return null;
         }
+
+
+
+            
     }
 }

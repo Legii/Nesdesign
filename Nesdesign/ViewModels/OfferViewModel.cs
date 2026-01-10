@@ -178,7 +178,7 @@ namespace Nesdesign.Models
                 {
                     SubscribeOffer(o);
                     if (loaded)
-                        await DatabaseHandler.AddRecordAsync(o);
+                        _ = DatabaseHandler.AddRecordAsync(o);
 
                 }
             }
@@ -186,22 +186,23 @@ namespace Nesdesign.Models
             // Unsubscribe removed items
             if (e.OldItems != null)
             {
+               
+
                 foreach (Offer o in e.OldItems)
                 {
                     UnsubscribeOffer(o);
-                    //_ = SqliteDatabase.DeleteOfferAsync(o.OfferId);
+                    _ = DatabaseHandler.DeleteRecordAsync(o);
                 }
             }
 
-            // Notify LatestOfferId changes
-            OnPropertyChanged(nameof(LatestOfferId));
-            SelectedItem = Offers[^1];
-            OnPropertyChanged(nameof(SelectedItem));
-           OnPropertyChanged(nameof(SelectedOfferId));
+           
+
+            if (Offers.Count > 0)
+                SelectedItem = Offers[^1];
+            else
+                SelectedItem = null;
            UpdateSum();
 
-            // Refresh filter if applied
-            OffersView.Refresh();
         }
 
  
@@ -215,12 +216,8 @@ namespace Nesdesign.Models
             get => _selectedItem;
             set
             {
-                // Prevent null selection
-                if (value == null && Offers.Count > 0)
-                    value = Offers[0];
 
                 _selectedItem = value;
-            
                 OnPropertyChanged(nameof(SelectedItem));
                 OnPropertyChanged(nameof(SelectedOfferId));
             }
@@ -260,6 +257,16 @@ namespace Nesdesign.Models
             return false;
         }
 
+        public void DeleteSelected()
+        {
+
+            if (SelectedItem == null)
+                return;
+           var toDelete = SelectedItem;
+            SelectedItem = null;
+            Offers.Remove(toDelete);
+
+        }
 
         public bool PatternFilter(object obj, string pattern)
         {
@@ -303,50 +310,7 @@ namespace Nesdesign.Models
                 return offer != null && offer.Status == status;
             };
         }
-        /*
-        public void FilterByClient(int clientId)
-        {
-       
 
-            OffersView.Filter = obj =>
-            {
-                var offer = obj as Offer;
-                return offer != null && offer.ClientId == clientId;
-            };
-           
-            if(clientId <= 0)
-            {
-                ClearFilter();
-            }
-        }
-
-
-        public void FilterByPattern(string pattern)
-        {
-            if (string.IsNullOrEmpty(pattern))
-            {
-                ClearFilter();
-                return;
-            }
-            try
-            {
-                var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
-                OffersView.Filter = obj =>
-                {
-                    var offer = obj as Offer;
-                    return offer != null && !string.IsNullOrEmpty(offer.OfferId) && regex.IsMatch(offer.AllInfo);
-                };
-            }
-            catch (ArgumentException)
-            {
-                OffersView.Filter = obj =>
-                {
-                    var offer = obj as Offer;
-                    return offer != null && !string.IsNullOrEmpty(offer.AllInfo) && offer.AllInfo.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
-                };
-            }
-        }
-        */
         public void ClearFilters()
         {
             if(FilteredStatus.HasValue || FilteredStatus.HasValue || FilterPattern != "")
@@ -377,6 +341,11 @@ namespace Nesdesign.Models
             {
                 return snapshot.Count(o => !string.IsNullOrEmpty(o.OfferId) && o.OfferId.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0);
             }
+        }
+
+        public void RemoveOffer(Offer offer)
+        {
+            this.Offers.Remove(offer);
         }
         public void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

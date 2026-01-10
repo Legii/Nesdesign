@@ -32,6 +32,7 @@ namespace Nesdesign
             AddSetting("ORDERS_PATH", "zamowienia", "Folder zamówień");
             AddSetting("OFFER_TEMPLATE_PATH", "szablon_oferty", "Ścieżka szablonu oferty");
             AddSetting("PROJECT_TEMPLATE_PATH", "szablon_projektu", "Ścieżka szablonu projektu");
+          
         }
 
         public void Setup()

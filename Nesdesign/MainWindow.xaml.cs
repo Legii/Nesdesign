@@ -1,9 +1,10 @@
-﻿using Nesdesign.Models;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Nesdesign.Models;
 using Nesdesign.Pages;
 using System.Collections;
-using System.Windows;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 namespace Nesdesign
 {
     public partial class MainWindow : Window
@@ -85,10 +86,40 @@ namespace Nesdesign
             MainFrame.Navigate(settingsPage);
         }
 
+        private void CreateOfferClick(object sender, RoutedEventArgs e)
+        {
+            creatorPage.CreateOfferAndCopy();
+            MainFrame.Navigate(offersPage);
+        }
+
+
+
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             SettingsManager.Instance.SaveToXml();
             base.OnClosing(e);
+        }
+
+        public class RequestDeleteSelectedOfferMessage { }
+
+        private async void DeleteOfferButtn_Click(object sender, RoutedEventArgs e)
+        {
+            Offer offer = offersViewModel.SelectedItem as Offer;
+            if(offer != null)
+            {
+                string id = offer.OfferId;
+                var result = MessageBox.Show($"Czy usunać ofertę {id}?", "Potwierdź akcję", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                    WeakReferenceMessenger.Default.Send(new RequestDeleteSelectedOfferMessage());
+ 
+              
+                else
+                    return;
+            } else
+            {
+                MessageBox.Show("Nie wybrano żadnej oferty do usuniecia");
+            }
+           
         }
     }
 }
