@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nesdesign.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -20,12 +21,14 @@ namespace Nesdesign.Pages
     public partial class SettingsPage : Page
     {
         private SettingsManager _settingsManager;
+        public ContractorsViewModel viewModel { get; set; }
 
-     
 
-        public SettingsPage(SettingsManager manager)
+
+        public SettingsPage(SettingsManager manager, ContractorsViewModel contractorsViewModel)
         {
             InitializeComponent();
+            viewModel = contractorsViewModel;
             DataContext = this;
             _settingsManager = manager;
             SettingsDataGrid.ItemsSource = _settingsManager.SettingsList;
@@ -36,11 +39,7 @@ namespace Nesdesign.Pages
 
         public void SetupSettings(SettingsManager manager)
         {
-;           _settingsManager = manager;
-           
-
-
-
+          _settingsManager = manager;
         }
 
 

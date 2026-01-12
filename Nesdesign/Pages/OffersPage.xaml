@@ -331,18 +331,21 @@
                                     MaxHeight="100"
                                     ScrollViewer.CanContentScroll="True"
                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                    Text="{Binding Description}"
+                                    Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     TextWrapping="Wrap" />
 
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn
-                        MinWidth="40"
-                        Binding="{Binding Quantity}"
-                        EditingElementStyle="{StaticResource DG_TextBox_Centered}"
-                        ElementStyle="{StaticResource DG_TextBlock_Centered}"
-                        Header="Ilość" />
+                   
+                    <DataGridTemplateColumn Header="Ilość">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        
+                    </DataGridTemplateColumn>
 
 
                     <DataGridTemplateColumn Header="Numer / nazwa">
@@ -407,8 +410,13 @@
                     <DataGridTemplateColumn Header="Kto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox
-                                    Text="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                         
+                                <ComboBox
+                                    DisplayMemberPath="Name"
+                                    IsEditable="False"
+                                    ItemsSource="{Binding DataContext.ContractorsModel.Contractors, RelativeSource={RelativeSource AncestorType=Page}}"
+                                    SelectedValue="{Binding Who, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValuePath="Id" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -436,27 +444,24 @@
                     </DataGridTemplateColumn>
 
 
-                    <DataGridTemplateColumn  x:Name="InvoiceColumn" Header="Nr faktury">
+                    <DataGridTemplateColumn x:Name="InvoiceColumn" Header="Nr faktury">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox
-                                    Text="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Text="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                
+
 
 
                     <DataGridTemplateColumn
                         x:Name="PriceColumn"
-
                         Header="Kwota [zł]"
                         IsReadOnly="False"
                         SortMemberPath="Price">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox
-                                    Text="{Binding Price, Converter={StaticResource DecimalToStringConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}" />
+                                <TextBox Text="{Binding Price, Converter={StaticResource DecimalToStringConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nesdesign.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,11 +14,12 @@ namespace Nesdesign
 {
     public class SettingsManager
     {
-
+     
         private Dictionary<string, Setting> _settingsDict;
 
+
         private static SettingsManager _instance;
-        public static SettingsManager Instance => _instance ??= new SettingsManager();
+        public static SettingsManager Instance => _instance ?? new SettingsManager();
 
         public ObservableCollection<Setting> SettingsList { get; private set; }
 
@@ -45,6 +47,7 @@ namespace Nesdesign
 
         public SettingsManager()
         {
+     
             _instance = this;
             SettingsList = new ObservableCollection<Setting>();
             _settingsDict = new Dictionary<string, Setting>();

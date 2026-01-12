@@ -8,14 +8,13 @@ using System.Windows.Media;
 namespace Nesdesign.Models
 {
 
+    [Table("Offers")]
 
     public partial class Offer : ObservableObject
     {
         [ObservableProperty]
         [Column("offerId")]
         private string offerId;
-
-
 
 
         [Column("photoPath")]
@@ -64,6 +63,7 @@ namespace Nesdesign.Models
         [Column("who")]
         private string? who = "";
 
+
         [ObservableProperty]
         [Column("date1")]
         private DateTime? date1;
@@ -78,7 +78,7 @@ namespace Nesdesign.Models
 
         [ObservableProperty]
         [Column("price")]
-        private decimal? price =100;
+        private decimal? price;
 
         [ObservableProperty]
         [Column("shipment")]

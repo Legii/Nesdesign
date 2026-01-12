@@ -14,11 +14,13 @@ namespace Nesdesign
         private SettingsManager settingsManager;
         OffersViewModel offersViewModel { get; set; }
         ClientsViewModel clientsViewModel { get; set; }
+        ContractorsViewModel contractorsViewModel { get; set; }
         private OffersPage offersPage { get; set; }
     
         private ClientsPage clientsPage { get; set; }
         private CreatorPage creatorPage { get; set; }
         private SettingsPage settingsPage { get; set; }
+
         
 
 
@@ -30,7 +32,10 @@ namespace Nesdesign
 
         public MainWindow()
         {
+            contractorsViewModel = new ContractorsViewModel();
             settingsManager = new SettingsManager();
+
+            
             
             FileHandler.CreateBaseDir();
             try
@@ -47,14 +52,15 @@ namespace Nesdesign
             PreloadImages(new List<string> {  });
            
             clientsViewModel = new ClientsViewModel();
-            offersViewModel = new OffersViewModel(clientsViewModel);
+            offersViewModel = new OffersViewModel(clientsViewModel, contractorsViewModel);
+            
           
 
             clientsPage = new ClientsPage(clientsViewModel);
       
             creatorPage = new CreatorPage(offersViewModel);
             offersPage = new OffersPage(offersViewModel);
-            settingsPage = new SettingsPage(settingsManager);
+            settingsPage = new SettingsPage(settingsManager, contractorsViewModel);
            
             MainFrame.Navigate(offersPage);
             

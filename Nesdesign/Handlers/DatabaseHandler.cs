@@ -19,7 +19,20 @@ namespace Nesdesign
             using (var db = new OffersDbContext())
             {
                 db.Database.EnsureCreated();
-               
+                var connection = db.Database.GetDbConnection();
+                connection.Open();
+                /*
+                                using var command = connection.CreateCommand();
+                                command.CommandText = @"
+                        CREATE TABLE IF NOT EXISTS WhoRecords (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Name TEXT NOT NULL
+                        );
+                        command.ExecuteNonQuery();
+                    ";*/
+                //
+
+
             }
         }
 
@@ -54,6 +67,7 @@ namespace Nesdesign
         {
             using (var db = new OffersDbContext())
             {
+
                 return await db.Set<T>().ToListAsync();
          
             }
@@ -68,6 +82,11 @@ namespace Nesdesign
         public static async Task<List<Client>> GetClientsAsync()
         {
             return await GetAllRecordsAsync<Client>();
+        }
+
+        public static async Task<List<Who>> GetContractorsAsync()
+        {
+            return await GetAllRecordsAsync<Who>();
         }
 
 

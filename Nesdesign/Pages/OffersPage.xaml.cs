@@ -16,10 +16,6 @@ namespace Nesdesign
     {
         OffersViewModel viewModel;
 
-        
-      
-    
-
         private void addProject(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is Offer offer)
@@ -28,7 +24,6 @@ namespace Nesdesign
                 OffersDataGrid.Items.Refresh();
             }
         }
-
         private void OpenImage(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is Offer offer)

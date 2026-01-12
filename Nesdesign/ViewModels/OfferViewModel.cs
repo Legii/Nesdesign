@@ -19,6 +19,7 @@ namespace Nesdesign.Models
     {
         public ObservableCollection<Offer> Offers { get; set; }
         public ClientsViewModel ClientsModel { get; set; }
+        public ContractorsViewModel ContractorsModel { get; set; }
 
         private string _filterPattern { get; set; } = string.Empty;
         public string FilterPattern
@@ -111,10 +112,11 @@ namespace Nesdesign.Models
             }
         }
 
-        public OffersViewModel(ClientsViewModel clientsModel)
+        public OffersViewModel(ClientsViewModel clientsModel, ContractorsViewModel contractorsModel)
         {
             Offers = new ObservableCollection<Offer>();
             ClientsModel = clientsModel;
+            ContractorsModel = contractorsModel;
             Offers.CollectionChanged += Offers_CollectionChanged;
             LoadOffersAsync();
         
