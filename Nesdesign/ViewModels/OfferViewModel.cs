@@ -65,7 +65,7 @@ namespace Nesdesign.Models
         private ICollectionView? _offersView;
         private bool loaded = false;
 
-        private bool showPaymentData = true;
+        private bool showPaymentData = false;
         private decimal _totalSum;
 
         public decimal TotalSum
@@ -155,11 +155,10 @@ namespace Nesdesign.Models
 
         private void Offer_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-
+           
             if (sender is Offer o)
             {
 
-             
                 if (e.PropertyName != nameof(Offer.AllInfo) && e.PropertyName != nameof(Offer.Photo))
                 {
                    o.UpdateAllInfo();
@@ -178,6 +177,9 @@ namespace Nesdesign.Models
                
                 foreach (Offer o in e.NewItems)
                 {
+                    
+                    //o.Contractor = ContractorsModel.Contractors.FirstOrDefault(c => c.Id.ToString() == o.Who);
+                    
                     SubscribeOffer(o);
                     if (loaded)
                         _ = DatabaseHandler.AddRecordAsync(o);

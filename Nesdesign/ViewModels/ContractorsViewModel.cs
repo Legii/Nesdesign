@@ -6,12 +6,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows.Input;
+using System.Diagnostics;
 
 namespace Nesdesign.Models
 {
     public class ContractorsViewModel : INotifyPropertyChanged
     {
-     
+        public bool Loaded { get; private set; } = false;
 
         // Kolekcja edytowana w UI
         public ObservableCollection<Who> Contractors { get; set; } = new ObservableCollection<Who>();
@@ -24,30 +25,34 @@ namespace Nesdesign.Models
         {
             Contractors.CollectionChanged += Contractors_CollectionChanged;
 
-            //LoadContractorsAsync();
+            LoadContractorsAsync();
         }
 
         // Wczytywanie danych z bazy
         public async Task LoadContractorsAsync()
         {
             var list = await DatabaseHandler.GetContractorsAsync();
-
-            foreach (var c in list)
+            Debug.WriteLine(string.Join(" ", list));
+            
+            foreach (Who c in list)
             {
-                Contractors.Add(c);
+                Contractors.Add(c); 
+        
                 SubscribeContractor(c);
             } 
             if (Contractors.Count == 0)
             {
-                var defaultContractor = new Who { Name = "-" };
-                Contractors.Add(defaultContractor);
-                await DatabaseHandler.AddRecordAsync(defaultContractor);
+                    var defaultContractor = new Who { Name = "-" };
+                    Contractors.Add(defaultContractor);
+                    await DatabaseHandler.AddRecordAsync(defaultContractor);
+           
             }
+            Loaded = true;
 
 
         }
 
-        // Subskrypcja zmian właściwości — ale NIC nie zapisujemy automatycznie
+
         private void SubscribeContractor(Who c)
         {
             if (c == null) return;
@@ -61,18 +66,33 @@ namespace Nesdesign.Models
             c.PropertyChanged -= Contractor_PropertyChanged;
         }
 
-        private void Contractor_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private async void Contractor_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged(nameof(ContractorNames));
+            Debug.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            if (sender is Who c)
+            {
+
+                await DatabaseHandler.UpdateRecordAsync(c);
+            }
+            
         }
 
 
         private void Contractors_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            
             if (e.NewItems != null)
             {
+                Debug.WriteLine("New");
                 foreach (Who c in e.NewItems)
+                {
                     SubscribeContractor(c);
+                    if(Loaded)
+                        DatabaseHandler.AddRecordAsync(c);
+                    
+                }
+                   
             }
 
             if (e.OldItems != null)
@@ -83,12 +103,13 @@ namespace Nesdesign.Models
 
             OnPropertyChanged(nameof(Count));
             OnPropertyChanged(nameof(ContractorNames));
-        }
 
-        // Zapis wszystkich zmian do bazy
+        }
+        
+
         public async Task SaveAllAsync()
         {
-            // Najprostsza wersja: nadpisujemy wszystkie rekordy
+     
             foreach (var c in Contractors)
                 await DatabaseHandler.UpdateRecordAsync(c);
         }
@@ -98,5 +119,7 @@ namespace Nesdesign.Models
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        
     }
+        
 }

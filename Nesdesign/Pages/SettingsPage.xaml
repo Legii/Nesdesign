@@ -39,13 +39,17 @@
                 Content="Pracownicy / podwykonawcy"
                 FontSize="16"
                 FontWeight="Bold" />
+         
             <DataGrid
                 x:Name="WhoDataGrid"
                 AutoGenerateColumns="False"
                 CanUserAddRows="True"
                 CanUserDeleteRows="False"
-                ItemsSource="{Binding viewModel.Contractors}">
+                ItemsSource="{Binding viewModel.Contractors}"
+                
+               >
                 <DataGrid.Columns>
+                    
                     <DataGridTextColumn
                         Width="Auto"
                         Binding="{Binding Id}"
@@ -53,7 +57,7 @@
                         IsReadOnly="True" />
                     <DataGridTextColumn
                         Width="*"
-                        Binding="{Binding Name}"
+                        Binding="{Binding Name, Mode=TwoWay}"
                         Header="Nazwa" />
                 </DataGrid.Columns>
             </DataGrid>

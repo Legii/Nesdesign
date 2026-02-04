@@ -306,6 +306,17 @@ namespace Nesdesign
             }
         }
 
+        private void ClearProductionClick(object sender, RoutedEventArgs e)
+        {
+            Offer selectedOffer = _viewModel.SelectedItem as Offer;
+            selectedOffer.Production = "";
+        }
+        private void ClearConstructionClick(object sender, RoutedEventArgs e)
+        {
+            Offer selectedOffer = _viewModel.SelectedItem as Offer;
+            selectedOffer.Construction = "";
+        }
+
         private void CreatedFilterClick(object sender, RoutedEventArgs e)
         {
             Filter(OfferStatus.UTWORZONA);
@@ -374,6 +385,9 @@ namespace Nesdesign
             e.Handled = !e.Text.All(char.IsDigit);
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
     }
 }

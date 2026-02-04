@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Nesdesign.Models
@@ -58,10 +59,21 @@ namespace Nesdesign.Models
         [ObservableProperty]
         [Column("production")]
         private string? production = "";
+        
+   
 
+
+      
+
+      
         [ObservableProperty]
+        [Column("ContractorId")]
+        private int? contractorId;
+
         [Column("who")]
-        private string? who = "";
+        private string who = "";
+
+
 
 
         [ObservableProperty]
@@ -117,7 +129,8 @@ namespace Nesdesign.Models
 
         public string projectPath => !String.IsNullOrEmpty(Construction) ? Construction : Production;
 
-        public Offer() { }
+        public Offer() {
+        }
 
         public Offer(string OfferId, ImageSource imageSource, string description, int quantity, string name, int clientId)
         {
@@ -181,12 +194,12 @@ namespace Nesdesign.Models
             };
         }
 
+        /*
+       public event PropertyChangedEventHandler PropertyChanged;
 
-       // public event PropertyChangedEventHandler PropertyChanged;
-
-        //protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
           //  => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
+*/
         public void UpdateAllInfo() { 
         
         OnPropertyChanged(nameof(AllInfo));

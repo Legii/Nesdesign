@@ -10,10 +10,10 @@ namespace Nesdesign
 {
     public class OffersDbContext : DbContext
     {
-        private static string _dbPath => Path.Combine(SettingsManager.Instance.GetValue("BASE_PATH"),"nesdesign.db");
+        public static string _dbPath => Path.Combine(SettingsManager.Instance.GetValue("BASE_PATH"),"nesdesign.db");
         public DbSet<Models.Offer> Offers { get; set; } 
         public DbSet<Models.Client> Clients { get; set; }
-        //public DbSet<Who> WhoRecords { get; set; }
+        public DbSet<Who> Contractors { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {

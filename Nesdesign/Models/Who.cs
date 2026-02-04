@@ -7,15 +7,23 @@ using System.Text;
 
 namespace Nesdesign.Models
 {
-    [Table("WhoRecords")]
+    [Table("Contractors")]
     public partial class Who : ObservableObject
     {
         [ObservableProperty]
-        [Key]
-        private int? id;
+        [Column("Id")]
+        private int id;
         [ObservableProperty]
         [Column("Name")]
         private string name = "";
 
+        
+
+        public override string ToString()
+        {
+            return id + " " + name; 
+        }
+    
     }
+
 }

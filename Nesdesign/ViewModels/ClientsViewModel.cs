@@ -1,37 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
-
-using System.Collections.Generic;
 using System.Windows;
 
 namespace Nesdesign.Models
 {
-
-
-
     public class ClientsViewModel : INotifyPropertyChanged
     {
         private bool loaded = false;
         public List<string> ClientNames => Clients.Select(c => c.Name).ToList();
+
         public ObservableCollection<Client> Clients { get; set; } = new ObservableCollection<Client>();
 
         public ClientsViewModel()
         {
-            Clients.CollectionChanged += Clients_CollectionChanged;
             LoadClientsAsync();
+            Clients.CollectionChanged += Clients_CollectionChanged;
+           
         }
-
 
         public async Task LoadClientsAsync()
         {
             var clientList = await DatabaseHandler.GetClientsAsync();
             foreach (var client in clientList)
             {
+            
+
                 Clients.Add(client);
                 SubscribeClient(client);
             }
@@ -92,14 +92,8 @@ namespace Nesdesign.Models
 
             OnPropertyChanged(nameof(Count));
             OnPropertyChanged(nameof(ClientNames));
-         
-
         }
-
-
-
         public int Count => Clients.Count;
-
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
