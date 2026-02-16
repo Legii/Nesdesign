@@ -35,6 +35,11 @@ namespace Nesdesign.Models
         [Column("quantity")]
         private int quantity = 1;
 
+
+        [ObservableProperty]
+        [Column("quantity2")]
+        private string? quantity2 = "1";
+
         [ObservableProperty]
         [Column("name")]
         private string name;
@@ -113,14 +118,28 @@ namespace Nesdesign.Models
                 _status = value;
                 OnPropertyChanged(nameof(Status));
                 OnPropertyChanged(nameof(statusString));
+                UpdateOrder();
+                
             }
         }
         
+        public void UpdateOrder()
+        {
+            OnPropertyChanged(nameof(IsOrder));
+            OnPropertyChanged(nameof(ShouldDiplayOrder));
+            OnPropertyChanged(nameof(ShouldDisplayCreateOrder));
+        }
+
         public string DaysLeftToDate1 => (Date1.HasValue) ? "(" + (Date1.Value - DateTime.Now).Days + " dni)" : "";
         public string DaysLeftToDate2 => (Date2.HasValue) ? "(" + (Date2.Value - DateTime.Now).Days + " dni)" : "";
 
         [NotMapped]
         public string AllInfo => $"{OfferId} {Description} {orderNumber} {name} {orderPath} {projectPath} ";
+
+        [NotMapped]
+        public bool IsOrder => Status == OfferStatus.GOTOWA || Status == OfferStatus.ZAMOWIENIE || Status == OfferStatus.W_REALIZACJI;
+        public bool ShouldDisplayCreateOrder => string.IsNullOrEmpty(OrderNumber) && IsOrder;
+        public bool ShouldDiplayOrder => !(string.IsNullOrEmpty(OrderNumber)) && IsOrder;
 
         public string statusString => StringHandler.GetEnumString(this.Status);
 

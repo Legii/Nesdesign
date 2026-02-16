@@ -12,11 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
+using System.Collections;
 namespace Nesdesign
 {
 
@@ -317,35 +313,40 @@ namespace Nesdesign
             selectedOffer.Construction = "";
         }
 
+        private void ClearOrderClick(object sender, RoutedEventArgs e)
+        {
+            Offer selectedOffer = _viewModel.SelectedItem as Offer;
+            selectedOffer.OrderNumber = "";
+        }
+
+
         private void CreatedFilterClick(object sender, RoutedEventArgs e)
         {
             Filter(OfferStatus.UTWORZONA);
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.NavigateToOffersPage();
-            }
+           
         }
         private void Option2FilterClick(object sender, RoutedEventArgs e)
         {
             Filter(OfferStatus.OFERTA);
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.NavigateToOffersPage();
-            }
+           
         }
 
         private void Option3FilterClick(object sender, RoutedEventArgs e)
         {
             Filter(OfferStatus.NIE_OFERTOWANA);
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.NavigateToOffersPage();
-            }
+            
         }
 
         private void InProgressFilterClick(object sender, RoutedEventArgs e)
         {
-            Filter(OfferStatus.W_REALIZACJI);
+            List<OfferStatus> t = new List<OfferStatus>();
+            t.Add(OfferStatus.ZAMOWIENIE);
+            t.Add(OfferStatus.W_REALIZACJI);
+            t.Add(OfferStatus.GOTOWA);
+            t.Add(OfferStatus.CZESCIOWE_ZAMOWIENIE);
+            t.Add(OfferStatus.W_PRODUKCJI);
+
+            this._viewModel.FIlterByMultipleStatuses(t);
             if (Application.Current.MainWindow is MainWindow mainWindow)
             {
                 mainWindow.NavigateToOffersPage();

@@ -94,7 +94,7 @@
                 Source="/nesdesign_sp_z_o_o_logo.jpg" />
         </Grid>
 
-        <!--  Używamy Border z Padding zamiast Padding na Grid  -->
+   
         <Border
             Margin="225,0,0,0"
             Padding="24"
@@ -164,7 +164,7 @@
                         <ComboBoxItem Content="Ręczna numeracja" />
                     </ComboBox>
 
-                    <!--  mały ComboBox ustawiony w tym samym "kolumnowym" lewym wyrównaniu co przyciski  -->
+
                     <StackPanel
                         x:Name="MonthYearPanel"
                         Grid.Row="4"
@@ -297,9 +297,9 @@
 
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="300" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition MaxWidth="300" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition MaxWidth="100" />
                     </Grid.ColumnDefinitions>
                     <Image
                         Grid.Row="0"
@@ -311,7 +311,7 @@
                         Source="{Binding SelectedItem.Photo}" />
                     <Label
                         Grid.Row="0"
-                        Grid.Column="2"
+                        Grid.Column="1"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Content="{Binding SelectedItem.OfferId}"
@@ -325,7 +325,7 @@
                         Style="{StaticResource Text}" />
                     <Label
                         Grid.Row="2"
-                        Grid.Column="2"
+                        Grid.Column="1" Grid.ColumnSpan="2"
                         Content="{Binding SelectedItem.Description}"
                         Style="{StaticResource Text}" />
                     <Label
@@ -336,9 +336,33 @@
                         Style="{StaticResource Text}" />
                     <Label
                         Grid.Row="4"
-                        Grid.Column="2"
+                        Grid.Column="1"
                         Content="{Binding SelectedItem.OrderNumber}"
                         Style="{StaticResource Text}" />
+                    <Button
+                        Grid.Row="4"
+                        Grid.Column="2"
+                        Click="ClearOrderClick">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="MaxWidth" Value="80" />
+                                <Setter Property="Background" Value="Red" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedItem.OrderNumber}" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding SelectedItem.OrderNumber}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        USUŃ
+                    </Button>
+
+
                     <Label
                         Grid.Row="6"
                         Grid.Column="0"
@@ -350,7 +374,7 @@
                     <Label
                         Grid.Row="6"
                         Grid.Column="1"
-                        HorizontalAlignment="Center"
+                      
                         Content="{Binding SelectedItem.Production}"
                         Style="{StaticResource Text}" />
                     <Button
@@ -387,7 +411,7 @@
                     <Label
                         Grid.Row="8"
                         Grid.Column="1"
-                        HorizontalAlignment="Center"
+                      
                         Content="{Binding SelectedItem.Construction}"
                         Style="{StaticResource Text}" />
                     <Button

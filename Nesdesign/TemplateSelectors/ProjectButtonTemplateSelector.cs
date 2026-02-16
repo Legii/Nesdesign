@@ -20,12 +20,12 @@ namespace Nesdesign.TemplateSelectors
         public DataTemplate TemplateA { get; set; }
         public DataTemplate TemplateB { get; set; }
 
+
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             if (item is Offer offer)
             {
                 
-
                 var cell = container as FrameworkElement;
                 var column = cell?.Parent as DataGridCell;
                 var tag = (column?.Column as MyTemplateColumn)?.ColumnKey as string;

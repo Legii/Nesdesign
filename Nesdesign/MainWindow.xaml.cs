@@ -10,6 +10,7 @@ namespace Nesdesign
     public partial class MainWindow : Window
 
     {
+        
         private DatabaseHandler dbHandler { get; } = new DatabaseHandler();
         private SettingsManager settingsManager;
         OffersViewModel offersViewModel { get; set; }
@@ -20,10 +21,10 @@ namespace Nesdesign
         private ClientsPage clientsPage { get; set; }
         private CreatorPage creatorPage { get; set; }
         private SettingsPage settingsPage { get; set; }
-
+        
         
 
-
+        
         public void PreloadImages(IEnumerable<string> paths)
         {
             foreach (var p in paths)
@@ -64,7 +65,7 @@ namespace Nesdesign
            
             MainFrame.Navigate(offersPage);
             
-
+            
         }
 
 
@@ -110,6 +111,7 @@ namespace Nesdesign
 
         private async void DeleteOfferButtn_Click(object sender, RoutedEventArgs e)
         {
+            
             Offer offer = offersViewModel.SelectedItem as Offer;
             if(offer != null)
             {

@@ -63,10 +63,8 @@ namespace Nesdesign
                     TextboxTotalSum.Visibility = visibility;
 
                 }
-
-  
-
             };
+            
             WeakReferenceMessenger.Default.Register<RequestDeleteSelectedOfferMessage>(this, (r, m) =>
             {
           
@@ -76,6 +74,13 @@ namespace Nesdesign
                 if (DataContext is OffersViewModel vm)
                     vm.DeleteSelected();
             });
+
+            Visibility visibility = Visibility.Collapsed;
+            InvoiceColumn.Visibility = visibility;
+            PriceColumn.Visibility = visibility;
+            PaymentStatusColumn.Visibility = visibility;
+            LabelTotalSum.Visibility = visibility;
+            TextboxTotalSum.Visibility = visibility;
 
         }
    

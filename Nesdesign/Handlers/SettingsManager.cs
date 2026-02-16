@@ -47,7 +47,7 @@ namespace Nesdesign
 
         public SettingsManager()
         {
-     
+            Console.WriteLine("Inicjacja ustawień");
             _instance = this;
             SettingsList = new ObservableCollection<Setting>();
             _settingsDict = new Dictionary<string, Setting>();

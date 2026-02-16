@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
 	<LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>Images\nesdesign_sp_z_o_o_logo.ico</ApplicationIcon>
-    <Platforms>AnyCPU;x86</Platforms>
+    	<Nullable>enable</Nullable>
+    	<ImplicitUsings>disable</ImplicitUsings>
+    	<UseWPF>true</UseWPF>
+    	<ApplicationIcon>Images\nesdesign_sp_z_o_o_logo.ico</ApplicationIcon>
+    	<Platforms>AnyCPU;x86</Platforms>
+    	
   </PropertyGroup>
 
   <ItemGroup>

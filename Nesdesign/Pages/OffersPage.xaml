@@ -29,19 +29,19 @@
         <Style TargetType="TextBox">
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent" />
         </Style>
 
         <Style TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent" />
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
         <Style TargetType="DataGridCell">
             <Setter Property="MaxWidth" Value="350" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent" />
         </Style>
 
 
@@ -60,22 +60,19 @@
         </Style>
 
 
+        <DataTemplate x:Key="none" />
+
 
 
         <DataTemplate x:Key="ButtonA">
+
             <Button
                 Width="Auto"
                 Click="CreateOrderCLick"
                 Content="Stwórz zamówienie" />
         </DataTemplate>
 
-        <DataTemplate x:Key="ButtonB">
-            <Button
-                Width="Auto"
-                Click="OpenOrderFolderClick"
-                Content="{Binding OrderNumber}"
-                PreviewMouseRightButtonDown="RightClick" />
-        </DataTemplate>
+        <DataTemplate x:Key="ButtonB" />
 
         <DataTemplate x:Key="addProjectButton">
             <Button
@@ -96,10 +93,7 @@
                 Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Path=Column.(local:MyTemplateColumn.ColumnKey)}" />
         </DataTemplate>
 
-        <selectors:OfferButtonTemplateSelector
-            x:Key="OfferButtonSelector"
-            TemplateA="{StaticResource ButtonA}"
-            TemplateB="{StaticResource ButtonB}" />
+
 
         <selectors:ProjectButtonTemplateSelector
             x:Key="ProjectButtonSelector"
@@ -111,11 +105,7 @@
 
         <local:DecimalToStringConverter x:Key="DecimalToStringConverter" />
 
-        <!--
-            Source - https://stackoverflow.com/a/4792893
-            Posted by Robin Maben
-            Retrieved 2026-02-03, License - CC BY-SA 2.5
-        -->
+
 
         <Style TargetType="{x:Type DataGrid}">
             <Setter Property="Background" Value="#FFF" />
@@ -131,12 +121,17 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+
         <!--  Checkbox sterujący widocznością kolumn faktury/kwoty  -->
         <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <!--  Checkbox  -->
                 <ColumnDefinition Width="Auto" />
@@ -146,21 +141,22 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <!--  Margin  -->
-                <ColumnDefinition Width="50" />
-                <!--  -Filter client  -->
+                <ColumnDefinition Width="30" />
+                <!--  -Filter client & contractor  -->
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+
                 <!--  Margin  -->
-                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="30" />
                 <!--  Filter status  -->
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <!--  Margin  -->
-                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="30" />
                 <!--  ClearFilters  -->
                 <ColumnDefinition Width="Auto" />
                 <!--  Margin  -->
-                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="30" />
                 <!--  Total sum  -->
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -186,8 +182,12 @@
                 TextAlignment="Center" />
 
             <!--  Filtruj klient  -->
-            <Label Grid.Column="5" Content="Filtruj klienta" />
+            <Label
+                Grid.Row="0"
+                Grid.Column="5"
+                Content="Filtruj klienta" />
             <ComboBox
+                Grid.Row="0"
                 Grid.Column="6"
                 MinWidth="120"
                 Margin="10,0,0,0"
@@ -197,10 +197,24 @@
                 SelectedValue="{Binding FilteredClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 SelectedValuePath="ClientId" />
 
+            <!--  Filtruj wykonawce  -->
+            <Label
+                Grid.Row="1"
+                Grid.Column="5"
+                Content="Filtruj wykonwcę" />
+            <ComboBox
+                Grid.Row="1"
+                Grid.Column="6"
+                MinWidth="120"
+                Margin="10,0,0,0"
+                DisplayMemberPath="Name"
+                IsEditable="False"
+                ItemsSource="{Binding ContractorsModel.Contractors}"
+                SelectedValue="{Binding FilteredContractorId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValuePath="Id" />
 
             <!--  Filtruj STATUS  -->
             <Label Grid.Column="8" Content="Filtruj status" />
-
             <ComboBox
                 Grid.Column="9"
                 MinWidth="120"
@@ -210,11 +224,7 @@
                 ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValuesPlusNull}}"
                 SelectedValue="{Binding FilteredStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 SelectedValuePath="Value" />
-            <!--
-            <ComboBox
-                DisplayMemberPath="Name"
-                ItemsSource="{Binding DataContext.ContractorsModel.Contractors, RelativeSource={RelativeSource AncestorType=Page}}"
-                SelectedItem="{Binding SelectedContractor, Mode=TwoWay}" />-->
+
             <Button
                 x:Name="ClearFiltersButton"
                 Grid.Column="11"
@@ -242,12 +252,6 @@
         </Grid>
 
 
-        <!--<ScrollViewer
-            Grid.Row="1"
-            Padding="10"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            HorizontalScrollBarVisibility="Visible">-->
         <DataGrid
             x:Name="OffersDataGrid"
             Grid.Row="1"
@@ -360,15 +364,22 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Ilość">
+                <DataGridTemplateColumn MaxWidth="200" Header="Ilość">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBox
+                                Height="150"
+                                MaxHeight="100"
+                                AcceptsReturn="True"
+                                ScrollViewer.CanContentScroll="True"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                Text="{Binding Quantity2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                TextWrapping="Wrap" />
+
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-
                 </DataGridTemplateColumn>
-
 
                 <DataGridTemplateColumn Header="Numer / nazwa">
                     <DataGridTemplateColumn.CellTemplate>
@@ -412,10 +423,62 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    CellTemplateSelector="{StaticResource OfferButtonSelector}"
-                    Header="Nr zamówienia"
-                    SortMemberPath="OrderNumber" />
+                <DataGridTemplateColumn Header="Nr zamówienia" SortMemberPath="OrderNumber">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Button
+                                    x:Name="TemplateB"
+                                    Width="Auto"
+                                    Click="CreateOrderCLick"
+                                    Content="Stwórz zamówienie"  Visibility="Collapsed"/>
+                                <Button
+                                    x:Name="TemplateA"
+                                    Width="Auto"
+                                    VerticalAlignment="Stretch"
+                                    Click="OpenOrderFolderClick"
+                                    Content="{Binding OrderNumber}"
+                                    PreviewMouseRightButtonDown="RightClick" Visibility="Collapsed" />
+                                
+                                
+                            </Grid>
+                            <DataTemplate.Triggers>
+
+                                <DataTrigger Binding="{Binding ShouldDiplayOrder}" Value="True">
+                                    <Setter TargetName="TemplateA"
+                    Property="Visibility"
+                    Value="Visible"/>
+                                </DataTrigger>
+
+
+                                <DataTrigger Binding="{Binding ShouldDiplayOrder}" Value="False">
+                                <Setter TargetName="TemplateA"
+                    Property="Visibility"
+                    Value="Hidden"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ShouldDisplayCreateOrder}" Value="True">
+                                    <Setter TargetName="TemplateB"
+                    Property="Visibility"
+                    Value="Visible"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ShouldDisplayCreateOrder}" Value="False">
+                                    <Setter TargetName="TemplateB"
+Property="Visibility"
+Value="Hidden"/>
+                                </DataTrigger>
+
+                            </DataTemplate.Triggers>
+
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+
+
+                </DataGridTemplateColumn>
+
 
                 <local:MyTemplateColumn
                     CellTemplateSelector="{StaticResource ProjectButtonSelector}"
@@ -432,14 +495,14 @@
                 <DataGridTemplateColumn Header="Kto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                             
+
                             <ComboBox
                                 DisplayMemberPath="Name"
                                 IsEditable="False"
                                 ItemsSource="{Binding DataContext.ContractorsModel.Contractors, RelativeSource={RelativeSource AncestorType=Page}}"
                                 SelectedValue="{Binding ContractorId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="Id" />
-               
+
 
                         </DataTemplate>
 

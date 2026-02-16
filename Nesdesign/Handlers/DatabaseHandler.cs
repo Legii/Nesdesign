@@ -21,10 +21,12 @@ namespace Nesdesign
         {
             using (var db = new OffersDbContext())
             {
+                Console.WriteLine("Łączenie z bazą");
                 db.Database.EnsureCreated();
                 var connection = db.Database.GetDbConnection();
-                Repeair();
+                //Repeair();
                 connection.Open();
+
 
 
             }

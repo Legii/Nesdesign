@@ -11,7 +11,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Collections;
 using System.Windows.Input;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Nesdesign.Models
 {
@@ -48,6 +51,21 @@ namespace Nesdesign.Models
                 OnPropertyChanged(nameof(FilteredClientId));
             }
         }
+
+        private int? _filteredContractorId;
+        public int? FilteredContractorId
+        {
+            get => _filteredContractorId;
+            set
+            {
+
+                _filteredContractorId = value;
+
+                ApplyCombinedFilter(FilterPattern);
+                OnPropertyChanged(nameof(FilteredContractorId));
+            }
+        }
+
 
         private OfferStatus? _filteredStatus;
         public OfferStatus? FilteredStatus
@@ -159,10 +177,14 @@ namespace Nesdesign.Models
             if (sender is Offer o)
             {
 
+          
                 if (e.PropertyName != nameof(Offer.AllInfo) && e.PropertyName != nameof(Offer.Photo))
                 {
                    o.UpdateAllInfo();
                 }
+                if (e.PropertyName == nameof(Offer.OrderNumber) || e.PropertyName == nameof(Offer.OrderPath))
+                    o.UpdateOrder();
+                
                 UpdateSum();
                 DatabaseHandler.UpdateRecordAsync(o);
 
@@ -261,6 +283,20 @@ namespace Nesdesign.Models
             return false;
         }
 
+
+        public bool ContractorFilter(object obj)
+        {
+            if (obj is Offer offer)
+            {
+                if (FilteredContractorId.HasValue)
+                {
+                    return offer.ContractorId == FilteredContractorId.Value;
+                }
+                return true; // No client filter applied
+            }
+            return false;
+        }
+
         public void DeleteSelected()
         {
 
@@ -297,13 +333,25 @@ namespace Nesdesign.Models
         {
             OffersView.Filter = obj =>
             {
-                return StatusFilter(obj) && ClientFilter(obj) && PatternFilter(obj, pattern);
+                return StatusFilter(obj) && ClientFilter(obj) && PatternFilter(obj, pattern) && ContractorFilter(obj);
             };
             UpdateSum();
         }
 
 
-        
+        public void FIlterByMultipleStatuses(List<OfferStatus> statuses)
+        {
+
+            OffersView.Filter = obj =>
+            {
+               var offer = obj as Offer;
+                foreach (OfferStatus status in statuses)
+                    if (offer.Status == status)
+                        return true;
+                return false;
+            };
+        }
+       
         public void FilterByStatus(OfferStatus status)
         {
             ClearFilters();
@@ -321,6 +369,7 @@ namespace Nesdesign.Models
             {
                 FilteredStatus = null;
                 FilteredClientId = null;
+                FilteredContractorId = null;
                 FilterPattern = string.Empty;
             }
    

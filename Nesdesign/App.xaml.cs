@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 
@@ -13,6 +14,7 @@ namespace Nesdesign
        
         protected override void OnStartup(StartupEventArgs e)
         {
+            Console.WriteLine("Start;");
             base.OnStartup(e);
 
         }
