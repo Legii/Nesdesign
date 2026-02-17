@@ -46,7 +46,7 @@ namespace Nesdesign.Models
 
         [ObservableProperty]
         [Column("clientId")]
-        private int? clientId;
+        private int? clientId = null;
 
 
         [ObservableProperty]
@@ -137,7 +137,7 @@ namespace Nesdesign.Models
         public string AllInfo => $"{OfferId} {Description} {orderNumber} {name} {orderPath} {projectPath} ";
 
         [NotMapped]
-        public bool IsOrder => Status == OfferStatus.GOTOWA || Status == OfferStatus.ZAMOWIENIE || Status == OfferStatus.W_REALIZACJI;
+        public bool IsOrder => (int)Status >= (int)OfferStatus.ZAMOWIENIE;
         public bool ShouldDisplayCreateOrder => string.IsNullOrEmpty(OrderNumber) && IsOrder;
         public bool ShouldDiplayOrder => !(string.IsNullOrEmpty(OrderNumber)) && IsOrder;
 
@@ -151,14 +151,14 @@ namespace Nesdesign.Models
         public Offer() {
         }
 
-        public Offer(string OfferId, ImageSource imageSource, string description, int quantity, string name, int clientId)
+        public Offer(string OfferId, ImageSource imageSource, string description, int quantity, string name)
         {
             this.OfferId = OfferId;
             this.Photo = imageSource;
             this.description = description;
             this.quantity = quantity;
             this.name = name;
-            this.clientId = clientId;
+            this.clientId = null;
             this.Status = OfferStatus.UTWORZONA;
 
             Closed = false;

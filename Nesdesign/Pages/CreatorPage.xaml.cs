@@ -118,7 +118,7 @@ namespace Nesdesign
             }
 
 
-            _viewModel.Offers.Add(new Offer(offerName, ImageHandler.LOGO, "", 1, "", 1));
+            _viewModel.Offers.Add(new Offer(offerName, ImageHandler.LOGO, "", 1, ""));
 
 
         }
@@ -164,7 +164,7 @@ namespace Nesdesign
             {
                 try
                 {
-                    Offer offer = new Offer(offerName, ImageHandler.LOGO, "", 1, "", 1);
+                    Offer offer = new Offer(offerName, ImageHandler.LOGO, "", 1, "");
                     _viewModel.Offers.Add(offer);
                     CopyOfferStructure(offer);
                 }
