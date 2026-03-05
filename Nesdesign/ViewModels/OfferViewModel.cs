@@ -350,6 +350,7 @@ namespace Nesdesign.Models
                         return true;
                 return false;
             };
+            UpdateSum();
         }
        
         public void FilterByStatus(OfferStatus status)
