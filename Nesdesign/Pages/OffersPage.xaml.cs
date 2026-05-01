@@ -83,9 +83,28 @@ namespace Nesdesign
             TextboxTotalSum.Visibility = visibility;
 
         }
-   
 
-       
+
+        private void ScrollToBottom_Click(object sender, RoutedEventArgs e)
+        {
+            if (OffersDataGrid.Items.Count > 0)
+            {
+  
+                var lastItem = OffersDataGrid.Items[OffersDataGrid.Items.Count - 1];
+                OffersDataGrid.ScrollIntoView(lastItem);
+            }
+        }
+
+        private void ScrollToTop_Click(object sender, RoutedEventArgs e)
+        {
+            if (OffersDataGrid.Items.Count > 0)
+            {
+
+                var lastItem = OffersDataGrid.Items[0];
+                OffersDataGrid.ScrollIntoView(lastItem);
+            }
+        }
+
 
 
         private void CreateOrderCLick(object sender, RoutedEventArgs e)
@@ -123,7 +142,16 @@ namespace Nesdesign
 
             OffersDataGrid.Items.Refresh();
 
-            FileHandler.CreateDir(offer.OrderPath, DIR_TYPE.Order);
+            FileOperationStatus operationStatus = FileHandler.CreateDir(offer.OrderPath, DIR_TYPE.Order);
+            if (operationStatus != FileOperationStatus.Success)
+            {
+                offer.OrderNumber = "";
+                offer.OrderPath = "";
+                if (operationStatus == FileOperationStatus.AlreadyExists)
+                    MessageBox.Show("Takie zamówienie juz istnieje!");
+                else
+                    MessageBox.Show("wystąpił bląd przy tworzeniu zamówienia");
+            }
             
             
    

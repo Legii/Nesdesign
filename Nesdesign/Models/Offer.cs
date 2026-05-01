@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace Nesdesign.Models
@@ -119,9 +122,24 @@ namespace Nesdesign.Models
                 OnPropertyChanged(nameof(Status));
                 OnPropertyChanged(nameof(statusString));
                 UpdateOrder();
-                
+
             }
         }
+
+        public class Part
+        {
+            public string Name { get; set; }
+            public bool Checked { get; set; }
+        }
+        
+
+
+
+
+
+
+        [NotMapped]
+        public ObservableCollection<Part> PartNames { get; set; } 
         
         public void UpdateOrder()
         {
@@ -133,6 +151,8 @@ namespace Nesdesign.Models
         public string DaysLeftToDate1 => (Date1.HasValue) ? "(" + (Date1.Value - DateTime.Now).Days + " dni)" : "";
         public string DaysLeftToDate2 => (Date2.HasValue) ? "(" + (Date2.Value - DateTime.Now).Days + " dni)" : "";
 
+        public string SortableOfferID => OfferId.Substring(5, 2) + OfferId.Substring(3, 2) + OfferId.Substring(1, 2);
+
         [NotMapped]
         public string AllInfo => $"{OfferId} {Description} {orderNumber} {name} {orderPath} {projectPath} ";
 
@@ -142,6 +162,7 @@ namespace Nesdesign.Models
         public bool ShouldDiplayOrder => !(string.IsNullOrEmpty(OrderNumber)) && IsOrder;
 
         public string statusString => StringHandler.GetEnumString(this.Status);
+        
 
         [ObservableProperty]
         private bool closed = false;
@@ -162,7 +183,24 @@ namespace Nesdesign.Models
             this.Status = OfferStatus.UTWORZONA;
 
             Closed = false;
+            LoadParts();
+
         }
+
+        public void LoadParts() {
+            PartNames = new ObservableCollection<Part>();
+
+            PartNames.Add(new Part { Name = "mokebe" });
+
+            PartNames.Add(new Part { Name = "mokebe2" });
+        }
+
+
+
+
+
+
+
 
         public void setProject(bool isConstruction = false)
         {
@@ -219,6 +257,9 @@ namespace Nesdesign.Models
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
           //  => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 */
+  
+
+
         public void UpdateAllInfo() { 
         
         OnPropertyChanged(nameof(AllInfo));

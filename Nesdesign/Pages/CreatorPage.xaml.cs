@@ -13,17 +13,20 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Collections;
+using Nesdesign.Pages;
 namespace Nesdesign
 {
 
     public partial class CreatorPage : Page
     {
         private readonly OffersViewModel _viewModel;
+        private OffersFilter _offersFilter;
 
-        public CreatorPage(OffersViewModel offersViewModel)
+        public CreatorPage(OffersViewModel offersViewModel, OffersFilter offersFilter)
         {
             InitializeComponent();
             _viewModel = offersViewModel;
+            _offersFilter = offersFilter;
             DataContext = _viewModel;
             YearTextBox.Text = DateTime.Now.Year.ToString();
         }
@@ -293,15 +296,29 @@ namespace Nesdesign
 
 
 
-        private void Filter(OfferStatus status)
+        private void PreviewTextInputHandler(object sender, TextCompositionEventArgs e)
         {
-            this._viewModel.FilterByStatus(status);
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.NavigateToOffersPage();
-            }
+
+            e.Handled = !e.Text.All(char.IsDigit);
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CreatedFilterClick(object sender, RoutedEventArgs e)
+        {
+           _offersFilter.CreatedFilter(sender, e);
+        }
+        private void Option2FilterClick(object sender, RoutedEventArgs e)
+        {
+            _offersFilter.Option2Filter(sender, e);
+        }
+        private void Option3FilterClick(object sender, RoutedEventArgs e)
+        {
+            _offersFilter.Option3Filter(sender, e);
+        }
         private void ClearProductionClick(object sender, RoutedEventArgs e)
         {
             Offer selectedOffer = _viewModel.SelectedItem as Offer;
@@ -313,82 +330,14 @@ namespace Nesdesign
             selectedOffer.Construction = "";
         }
 
+
         private void ClearOrderClick(object sender, RoutedEventArgs e)
         {
             Offer selectedOffer = _viewModel.SelectedItem as Offer;
             selectedOffer.OrderNumber = "";
         }
 
-
-        private void CreatedFilterClick(object sender, RoutedEventArgs e)
-        {
-            Filter(OfferStatus.UTWORZONA);
-           
-        }
-        private void Option2FilterClick(object sender, RoutedEventArgs e)
-        {
-            Filter(OfferStatus.OFERTA);
-           
-        }
-
-        private void Option3FilterClick(object sender, RoutedEventArgs e)
-        {
-            Filter(OfferStatus.NIE_OFERTOWANA);
-            
-        }
-
-        private void InProgressFilterClick(object sender, RoutedEventArgs e)
-        {
-            List<OfferStatus> t = new List<OfferStatus>();
-            t.Add(OfferStatus.ZAMOWIENIE);
-            t.Add(OfferStatus.W_REALIZACJI);
-            t.Add(OfferStatus.GOTOWA);
-            t.Add(OfferStatus.CZESCIOWE_ZAMOWIENIE);
-            t.Add(OfferStatus.W_PRODUKCJI);
-
-            this._viewModel.FIlterByMultipleStatuses(t);
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.NavigateToOffersPage();
-            }
-        }
-
-        private void ReadyFilterClick(object sender, RoutedEventArgs e)
-        {
-            Filter(OfferStatus.GOTOWA);
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.NavigateToOffersPage();
-            }
-
-        }
-        private void FinishedFilterClick(object sender, RoutedEventArgs e)
-        {
-            Filter(OfferStatus.ZAKONCZONA);
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.NavigateToOffersPage();
-            }
-        }
-
-        private void ClearFilterClick(object sender, RoutedEventArgs e)
-        {
-            _viewModel.ClearFilters();
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.NavigateToOffersPage();
-            }
-        }
-
-        private void PreviewTextInputHandler(object sender, TextCompositionEventArgs e)
-        {
-
-            e.Handled = !e.Text.All(char.IsDigit);
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
+
+
 }

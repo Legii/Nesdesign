@@ -45,45 +45,7 @@
                 Click="Option3FilterClick"
                 Content="Nie ofertowane"
                 RenderTransformOrigin="0.527,-0.875" />
-            <Label
-                Margin="41,455,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Content="STATUS &#xD;&#xA;PROJEKTÓW"
-                FontSize="22"
-                Foreground="White" />
-            <Button
-                Width="150"
-                Margin="41,545,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Click="InProgressFilterClick"
-                Content="W TOKU"
-                RenderTransformOrigin="0.729,3.507" />
-            <Button
-                Width="150"
-                Margin="41,590,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Click="ReadyFilterClick"
-                Content="GOTOWE"
-                RenderTransformOrigin="0.604,3.006" />
-            <Button
-                Width="150"
-                Margin="41,635,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Click="FinishedFilterClick"
-                Content="ZAKOŃCZONE"
-                RenderTransformOrigin="0.527,-0.875" />
-            <Button
-                Width="150"
-                Margin="41,680,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Click="ClearFilterClick"
-                Content="WSZYSTKIE"
-                RenderTransformOrigin="0.527,-0.875" />
+
             <Image
                 Width="150"
                 Height="150"
@@ -94,7 +56,7 @@
                 Source="/nesdesign_sp_z_o_o_logo.jpg" />
         </Grid>
 
-   
+
         <Border
             Margin="225,0,0,0"
             Padding="24"
@@ -325,7 +287,8 @@
                         Style="{StaticResource Text}" />
                     <Label
                         Grid.Row="2"
-                        Grid.Column="1" Grid.ColumnSpan="2"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
                         Content="{Binding SelectedItem.Description}"
                         Style="{StaticResource Text}" />
                     <Label
@@ -374,7 +337,6 @@
                     <Label
                         Grid.Row="6"
                         Grid.Column="1"
-                      
                         Content="{Binding SelectedItem.Production}"
                         Style="{StaticResource Text}" />
                     <Button
@@ -411,7 +373,6 @@
                     <Label
                         Grid.Row="8"
                         Grid.Column="1"
-                      
                         Content="{Binding SelectedItem.Construction}"
                         Style="{StaticResource Text}" />
                     <Button

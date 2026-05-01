@@ -10,7 +10,7 @@ namespace Nesdesign
     public partial class MainWindow : Window
 
     {
-        
+        private OffersFilter offersFilter;
         private DatabaseHandler dbHandler { get; } = new DatabaseHandler();
         private SettingsManager settingsManager;
         OffersViewModel offersViewModel { get; set; }
@@ -21,6 +21,7 @@ namespace Nesdesign
         private ClientsPage clientsPage { get; set; }
         private CreatorPage creatorPage { get; set; }
         private SettingsPage settingsPage { get; set; }
+        
         
         
 
@@ -54,12 +55,12 @@ namespace Nesdesign
            
             clientsViewModel = new ClientsViewModel();
             offersViewModel = new OffersViewModel(clientsViewModel, contractorsViewModel);
-            
-          
 
+
+            offersFilter = new OffersFilter(offersViewModel);
             clientsPage = new ClientsPage(clientsViewModel);
       
-            creatorPage = new CreatorPage(offersViewModel);
+            creatorPage = new CreatorPage(offersViewModel , offersFilter);
             offersPage = new OffersPage(offersViewModel);
             settingsPage = new SettingsPage(settingsManager, contractorsViewModel);
            
@@ -99,7 +100,24 @@ namespace Nesdesign
             MainFrame.Navigate(offersPage);
         }
 
+        private void InProgressFilterClick(object sender, RoutedEventArgs e)
+        {
+            offersFilter.InProgressFilter(sender, e);
+        }
 
+        private void ReadyFilterClick(object sender, RoutedEventArgs e)
+        {
+           offersFilter.ReadyFilter(sender, e);
+        }
+        private void FinishedFilterClick(object sender, RoutedEventArgs e)
+        {
+           offersFilter.FinishedFilter(sender, e);
+        }
+
+        private void ClearFilterClick(object sender, RoutedEventArgs e)
+        {
+            offersFilter.ClearFilter(sender, e);
+        }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {

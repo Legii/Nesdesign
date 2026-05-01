@@ -150,6 +150,7 @@ namespace Nesdesign.Models
             {
                 Offers.Add(offer);
                 offer.LoadPhoto(offer.PhotoPath);
+                offer.LoadParts();
                 SubscribeOffer(offer);
             }
             loaded = true;

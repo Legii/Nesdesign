@@ -81,6 +81,7 @@
                 Click="addProject"
                 Content="Dodaj"
                 Tag="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Path=Column.(local:MyTemplateColumn.ColumnKey)}" />
+
         </DataTemplate>
 
         <DataTemplate x:Key="openFolderButton">
@@ -133,33 +134,35 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <!--  Checkbox  -->
+                <!--  0. Checkbox  -->
                 <ColumnDefinition Width="Auto" />
-                <!--  Margin  -->
+                <!--  1. Margin  -->
                 <ColumnDefinition Width="50" />
-                <!--  Filter Textbox  -->
+                <!--  2. 3. Filter Textbox  -->
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <!--  Margin  -->
+                <!--  4. Margin  -->
                 <ColumnDefinition Width="30" />
-                <!--  -Filter client & contractor  -->
+                <!--  5. 6. Filter client  -->
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
 
-                <!--  Margin  -->
+                <!--  7. Margin  -->
                 <ColumnDefinition Width="30" />
-                <!--  Filter status  -->
+                <!--  8. 9. Filter status  -->
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <!--  10. Margin  -->
+                <ColumnDefinition Width="30" />
+                <!--  11. 12. Filter contractor  -->
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <!--  13.  Margin  -->
+                <ColumnDefinition Width="30" />
+                <!--  14.  ClearFilters  -->
                 <ColumnDefinition Width="Auto" />
                 <!--  Margin  -->
-                <ColumnDefinition Width="30" />
-                <!--  ClearFilters  -->
-                <ColumnDefinition Width="Auto" />
-                <!--  Margin  -->
-                <ColumnDefinition Width="30" />
-                <!--  Total sum  -->
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+
             </Grid.ColumnDefinitions>
 
 
@@ -178,8 +181,41 @@
                 Height="30"
                 MinWidth="200"
                 VerticalContentAlignment="Center"
-                Text="{Binding FilterPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Text="{Binding FilterPattern, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                 TextAlignment="Center" />
+
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="3"
+                MinWidth="200"
+                Orientation="Horizontal">
+                <Button
+                    Width="Auto"
+                    MinWidth="95"
+                    Padding="5,0"
+                    Background="#ddddff"
+                    BorderThickness="1"
+                    Click="ScrollToTop_Click"
+                    FontSize="10">
+                    przejdź na początek
+                </Button>
+                <Label
+                    MinWidth="10"
+                    VerticalAlignment="Center"
+                    Content=""
+                    FontSize="10" />
+                <Button
+                    Width="Auto"
+                    MinWidth="95"
+                    Padding="5,0"
+                    Background="#ffdddd"
+                    BorderThickness="1"
+                    Click="ScrollToBottom_Click"
+                    FontSize="10">
+                    przejdź do końca
+                </Button>
+            </StackPanel>
+
 
             <!--  Filtruj klient  -->
             <Label
@@ -194,24 +230,9 @@
                 DisplayMemberPath="Name"
                 IsEditable="False"
                 ItemsSource="{Binding ClientsModel.Clients}"
-                SelectedValue="{Binding FilteredClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValue="{Binding FilteredClientId, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                 SelectedValuePath="ClientId" />
 
-            <!--  Filtruj wykonawce  -->
-            <Label
-                Grid.Row="1"
-                Grid.Column="5"
-                Content="Filtruj wykonwcę" />
-            <ComboBox
-                Grid.Row="1"
-                Grid.Column="6"
-                MinWidth="120"
-                Margin="10,0,0,0"
-                DisplayMemberPath="Name"
-                IsEditable="False"
-                ItemsSource="{Binding ContractorsModel.Contractors}"
-                SelectedValue="{Binding FilteredContractorId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                SelectedValuePath="Id" />
 
             <!--  Filtruj STATUS  -->
             <Label Grid.Column="8" Content="Filtruj status" />
@@ -222,32 +243,56 @@
                 DisplayMemberPath="Description"
                 IsEditable="False"
                 ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValuesPlusNull}}"
-                SelectedValue="{Binding FilteredStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValue="{Binding FilteredStatus, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                 SelectedValuePath="Value" />
+
+
+
+            <!--  Filtruj wykonawce  -->
+            <Label
+                Grid.Row="0"
+                Grid.Column="11"
+                Content="Filtruj wykonwcę" />
+            <ComboBox
+                Grid.Row="0"
+                Grid.Column="12"
+                MinWidth="120"
+                Margin="10,0,0,0"
+                DisplayMemberPath="Name"
+                IsEditable="False"
+                ItemsSource="{Binding ContractorsModel.Contractors}"
+                SelectedValue="{Binding FilteredContractorId, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                SelectedValuePath="Id" />
+
 
             <Button
                 x:Name="ClearFiltersButton"
-                Grid.Column="11"
+                Grid.Column="14"
                 Width="100"
                 Height="30"
                 Padding="0"
                 Click="ClearFiltersButton_Click"
                 Content="Wyczyść Filtry" />
 
+
             <!--  Całkowita wartość projektów  -->
             <Label
                 x:Name="LabelTotalSum"
-                Grid.Column="13"
+                Grid.Row="1"
+                Grid.Column="11"
                 Content="Całkowita wartość:" />
             <TextBlock
                 x:Name="TextboxTotalSum"
-                Grid.Column="14"
+                Grid.Row="1"
+                Grid.Column="12"
                 Height="30"
                 VerticalAlignment="Center"
                 FontSize="18"
                 FontWeight="Bold"
                 Foreground="DarkGreen"
                 Text="{Binding TotalSum}" />
+
+            <Button Grid.Row="1" Grid.Column="14" />
 
         </Grid>
 
@@ -324,7 +369,7 @@
                 </DataGridTemplateColumn>
 
 
-                <DataGridTemplateColumn Header="Nr oferty / zapytania" SortMemberPath="OfferId">
+                <DataGridTemplateColumn Header="Nr oferty / zapytania" SortMemberPath="SortableOfferID">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button
@@ -348,7 +393,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn MaxWidth="200" Header="Opis">
+                <DataGridTemplateColumn
+                    MaxWidth="200"
+                    Header="Opis"
+                    SortMemberPath="Description">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
 
@@ -357,14 +405,17 @@
                                 MaxHeight="100"
                                 ScrollViewer.CanContentScroll="True"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                 TextWrapping="Wrap" />
 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn MaxWidth="200" Header="Ilość">
+                <DataGridTemplateColumn
+                    MaxWidth="200"
+                    Header="Ilość"
+                    SortMemberPath="Quantity2">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
 
@@ -374,20 +425,20 @@
                                 AcceptsReturn="True"
                                 ScrollViewer.CanContentScroll="True"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                Text="{Binding Quantity2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding Quantity2, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                 TextWrapping="Wrap" />
 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Numer / nazwa">
+                <DataGridTemplateColumn Header="Numer / nazwa" SortMemberPath="Name">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox
                                 AcceptsReturn="True"
                                 PreviewKeyDown="TextBox_PreviewKeyDown"
-                                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding Name, UpdateSourceTrigger=LostFocus}"
                                 TextWrapping="Wrap"
                                 VerticalScrollBarVisibility="Auto" />
                         </DataTemplate>
@@ -431,42 +482,36 @@
                                     x:Name="TemplateB"
                                     Width="Auto"
                                     Click="CreateOrderCLick"
-                                    Content="Stwórz zamówienie"  Visibility="Collapsed"/>
+                                    Content="Stwórz zamówienie"
+                                    Visibility="Collapsed" />
                                 <Button
                                     x:Name="TemplateA"
                                     Width="Auto"
                                     VerticalAlignment="Stretch"
                                     Click="OpenOrderFolderClick"
                                     Content="{Binding OrderNumber}"
-                                    PreviewMouseRightButtonDown="RightClick" Visibility="Collapsed" />
-                                
-                                
+                                    PreviewMouseRightButtonDown="RightClick"
+                                    Visibility="Collapsed" />
+
+
                             </Grid>
                             <DataTemplate.Triggers>
 
                                 <DataTrigger Binding="{Binding ShouldDiplayOrder}" Value="True">
-                                    <Setter TargetName="TemplateA"
-                    Property="Visibility"
-                    Value="Visible"/>
+                                    <Setter TargetName="TemplateA" Property="Visibility" Value="Visible" />
                                 </DataTrigger>
 
 
                                 <DataTrigger Binding="{Binding ShouldDiplayOrder}" Value="False">
-                                <Setter TargetName="TemplateA"
-                    Property="Visibility"
-                    Value="Hidden"/>
+                                    <Setter TargetName="TemplateA" Property="Visibility" Value="Hidden" />
                                 </DataTrigger>
 
                                 <DataTrigger Binding="{Binding ShouldDisplayCreateOrder}" Value="True">
-                                    <Setter TargetName="TemplateB"
-                    Property="Visibility"
-                    Value="Visible"/>
+                                    <Setter TargetName="TemplateB" Property="Visibility" Value="Visible" />
                                 </DataTrigger>
 
                                 <DataTrigger Binding="{Binding ShouldDisplayCreateOrder}" Value="False">
-                                    <Setter TargetName="TemplateB"
-Property="Visibility"
-Value="Hidden"/>
+                                    <Setter TargetName="TemplateB" Property="Visibility" Value="Hidden" />
                                 </DataTrigger>
 
                             </DataTemplate.Triggers>
@@ -492,6 +537,42 @@ Value="Hidden"/>
                     Header="Produkcja"
                     SortMemberPath="production" />
 
+                <!--
+                <DataGridTemplateColumn Header="Test">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DataGrid
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="True"
+                                CanUserDeleteRows="True"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow"
+                                IsReadOnly="False"
+                                MinHeight="50"
+                                ItemsSource="{Binding PartNames}">
+
+                                <DataGrid.Columns>
+
+                                    <DataGridTextColumn Binding="{Binding Name}" Width="*" MinWidth="100"/>
+                                    <DataGridTemplateColumn MaxWidth="20">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding Path=Checked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+
+                            </DataGrid>
+
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+
+                </DataGridTemplateColumn>
+                -->
                 <DataGridTemplateColumn Header="Kto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -509,7 +590,7 @@ Value="Hidden"/>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Termin wykonania">
+                <DataGridTemplateColumn Header="Termin wykonania" SortMemberPath="Date1">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -520,7 +601,7 @@ Value="Hidden"/>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Termin dostawy">
+                <DataGridTemplateColumn Header="Termin dostawy" SortMemberPath="Date2">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -532,10 +613,13 @@ Value="Hidden"/>
                 </DataGridTemplateColumn>
 
 
-                <DataGridTemplateColumn x:Name="InvoiceColumn" Header="Nr faktury">
+                <DataGridTemplateColumn
+                    x:Name="InvoiceColumn"
+                    Header="Nr faktury"
+                    SortMemberPath="InvoiceNumber">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBox Text="{Binding InvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -549,7 +633,7 @@ Value="Hidden"/>
                     SortMemberPath="Price">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Price, Converter={StaticResource DecimalToStringConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:0.##}'}" />
+                            <TextBox Text="{Binding Price, Converter={StaticResource DecimalToStringConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat='{}{0:0.##}'}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
 
