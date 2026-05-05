@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Nesdesign.Models;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
@@ -239,7 +240,20 @@ namespace Nesdesign
 
         }
 
-    
+        private void AddPart_Click(object sender, RoutedEventArgs e)
+        {
+            Offer offer = (sender as Button).DataContext as Offer;
+            Console.WriteLine(offer.ToString());
+            offer.AddPart();
+        }
+
+        private void DeletePart_Click(object sender, RoutedEventArgs e)
+        {
+            Part part = (sender as Button).DataContext as Part;
+            part.Delete();
+        }
+
+
         private static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
         {
             if (child == null) return null;

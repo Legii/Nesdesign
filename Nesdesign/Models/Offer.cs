@@ -1,12 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
+using System.Linq;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Nesdesign.Models
@@ -126,13 +125,6 @@ namespace Nesdesign.Models
             }
         }
 
-        public class Part
-        {
-            public string Name { get; set; }
-            public bool Checked { get; set; }
-        }
-        
-
 
 
 
@@ -147,6 +139,9 @@ namespace Nesdesign.Models
             OnPropertyChanged(nameof(ShouldDiplayOrder));
             OnPropertyChanged(nameof(ShouldDisplayCreateOrder));
         }
+
+
+        
 
         public string DaysLeftToDate1 => (Date1.HasValue) ? "(" + (Date1.Value - DateTime.Now).Days + " dni)" : "";
         public string DaysLeftToDate2 => (Date2.HasValue) ? "(" + (Date2.Value - DateTime.Now).Days + " dni)" : "";
@@ -185,19 +180,28 @@ namespace Nesdesign.Models
             Closed = false;
             LoadParts();
 
+
         }
 
         public void LoadParts() {
             PartNames = new ObservableCollection<Part>();
-
-            PartNames.Add(new Part { Name = "mokebe" });
-
-            PartNames.Add(new Part { Name = "mokebe2" });
+            
+            string[] names = this.name.Split("\n");
+            foreach (string pName in names)
+            {
+                string t = pName.Trim();
+                if(!(t.EndsWith("?1") || t.EndsWith("?0")))
+                {
+                    t += "?1";
+                }
+                
+                PartNames.Add(new Part(t.Split("?")[0], Int16.Parse(t.Split("?")[1]) > 0, this));
+            }
         }
 
 
 
-
+   
 
 
 
@@ -251,14 +255,47 @@ namespace Nesdesign.Models
             };
         }
 
+        public void NewPartsText()
+        {
+            string t = "";
+            foreach(Part p in PartNames)
+            {
+                t += p.Name.Trim() + "?" + (p.Checked ? "1" : "0") + "\n";
+            }
+            this.name = t.Trim();
+            OnPropertyChanged(nameof(Name));
+        }
+
         /*
        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
           //  => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 */
-  
 
+        
+        public void AddPart()
+        {
+            this.PartNames.Add(new Part("", true, this));
+            NewPartsText();
+        }
+
+        public void DeletePart(Part part)
+        {
+            
+            if (part != null)
+            {
+                if(PartNames.Count > 1)
+                {
+                    PartNames.Remove(part);
+                    NewPartsText();
+                } else
+                {
+                    part.Name = "";
+                }
+
+            }
+        }
 
         public void UpdateAllInfo() { 
         

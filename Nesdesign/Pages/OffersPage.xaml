@@ -13,6 +13,12 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <Style TargetType="ItemsControl">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+
         <Style TargetType="Button">
             <Setter Property="Width" Value="Auto" />
             <Setter Property="Padding" Value="0" />
@@ -27,6 +33,7 @@
         </Style>
 
         <Style TargetType="TextBox">
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Background" Value="Transparent" />
@@ -131,6 +138,7 @@
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
+                <RowDefinition Height="5" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -181,11 +189,11 @@
                 Height="30"
                 MinWidth="200"
                 VerticalContentAlignment="Center"
-                Text="{Binding FilterPattern, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                Text="{Binding FilterPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 TextAlignment="Center" />
 
             <StackPanel
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.Column="3"
                 MinWidth="200"
                 Orientation="Horizontal">
@@ -230,7 +238,7 @@
                 DisplayMemberPath="Name"
                 IsEditable="False"
                 ItemsSource="{Binding ClientsModel.Clients}"
-                SelectedValue="{Binding FilteredClientId, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                SelectedValue="{Binding FilteredClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 SelectedValuePath="ClientId" />
 
 
@@ -243,7 +251,7 @@
                 DisplayMemberPath="Description"
                 IsEditable="False"
                 ItemsSource="{Binding Source={x:Static models:OfferStatusEnumValues.AllValuesPlusNull}}"
-                SelectedValue="{Binding FilteredStatus, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                SelectedValue="{Binding FilteredStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 SelectedValuePath="Value" />
 
 
@@ -261,7 +269,7 @@
                 DisplayMemberPath="Name"
                 IsEditable="False"
                 ItemsSource="{Binding ContractorsModel.Contractors}"
-                SelectedValue="{Binding FilteredContractorId, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                SelectedValue="{Binding FilteredContractorId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 SelectedValuePath="Id" />
 
 
@@ -278,12 +286,12 @@
             <!--  Całkowita wartość projektów  -->
             <Label
                 x:Name="LabelTotalSum"
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.Column="11"
                 Content="Całkowita wartość:" />
             <TextBlock
                 x:Name="TextboxTotalSum"
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.Column="12"
                 Height="30"
                 VerticalAlignment="Center"
@@ -292,7 +300,12 @@
                 Foreground="DarkGreen"
                 Text="{Binding TotalSum}" />
 
-            <Button Grid.Row="1" Grid.Column="14" />
+            <Button
+                Grid.Row="2"
+                Grid.Column="14"
+                Background="#aaffbb">
+                List przewozowy
+            </Button>
 
         </Grid>
 
@@ -300,6 +313,7 @@
         <DataGrid
             x:Name="OffersDataGrid"
             Grid.Row="1"
+            Margin="0,5"
             AlternationCount="2"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
@@ -385,6 +399,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button
+                                
                                 Width="80"
                                 Height="80"
                                 Click="OpenImage">
@@ -420,9 +435,10 @@
                         <DataTemplate>
 
                             <TextBox
-                                Height="150"
-                                MaxHeight="100"
+                                Height="Auto"
+                                
                                 AcceptsReturn="True"
+                                FontSize="17"
                                 ScrollViewer.CanContentScroll="True"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                                 Text="{Binding Quantity2, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
@@ -431,7 +447,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+                <!--
                 <DataGridTemplateColumn Header="Numer / nazwa" SortMemberPath="Name">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -443,6 +459,96 @@
                                 VerticalScrollBarVisibility="Auto" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                -->
+                <DataGridTemplateColumn
+                    Width="Auto"
+                    MaxWidth="350"
+                    Header="Numer / nazwa"
+                    SortMemberPath="Name">
+
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+
+                            <Border VerticalAlignment="Center">
+                                <StackPanel>
+                                    <StackPanel.Resources>
+                                        <Style TargetType="Button">
+                                            <Setter Property="BorderThickness" Value="0" />
+                                            <Setter Property="Foreground" Value="White" />
+                                            <Setter Property="Margin" Value="1"></Setter>
+                                            
+                                        </Style>
+                                        <Style TargetType="TextBox">
+                                            <!--<Setter Property="Background" Value="#aaaaaaff" />-->
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <Frame Height="30" />
+                                    <ItemsControl Margin="0" ItemsSource="{Binding PartNames}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel VerticalAlignment="Center" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+
+
+
+
+
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+
+                                                <Grid Margin="0" VerticalAlignment="Center">
+                                                    <Grid.ColumnDefinitions>
+
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <!--  delete button  -->
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBox
+                                                        Grid.Column="0"
+                                                        Margin="2"
+                                                        VerticalAlignment="Center"
+                                                        Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                                    <CheckBox
+                                                        Grid.Column="1"
+                                                        Margin="6,0"
+                                                        VerticalAlignment="Center"
+                                                        IsChecked="{Binding Checked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                                    <!--  Delete row  -->
+                                                    <Button
+                                                        Grid.Column="2"
+                                                        Padding="2"
+                                                        Background="Red"
+                                                        Click="DeletePart_Click"
+                                                        FontSize="8"
+                                                        Content="✕" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <!--  Add row  -->
+                                    <Button
+                                        Margin="0,4,0,0"
+                                        Padding="2"
+                                        HorizontalAlignment="Right"
+                                        Background="#bbbbcc"
+                                        Click="AddPart_Click"
+                                        Content="+ Dodaj" />
+
+                                </StackPanel>
+                            </Border>
+
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+
                 </DataGridTemplateColumn>
 
 
@@ -529,50 +635,17 @@
                     CellTemplateSelector="{StaticResource ProjectButtonSelector}"
                     ColumnKey="construction"
                     Header="Konstrukcja"
-                    SortMemberPath="construction" />
+                    SortMemberPath="Construction" />
 
                 <local:MyTemplateColumn
                     CellTemplateSelector="{StaticResource ProjectButtonSelector}"
                     ColumnKey="production"
                     Header="Produkcja"
-                    SortMemberPath="production" />
-
-                <!--
-                <DataGridTemplateColumn Header="Test">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <DataGrid
-                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                AutoGenerateColumns="False"
-                                CanUserAddRows="True"
-                                CanUserDeleteRows="True"
-                                SelectionMode="Single"
-                                SelectionUnit="FullRow"
-                                IsReadOnly="False"
-                                MinHeight="50"
-                                ItemsSource="{Binding PartNames}">
-
-                                <DataGrid.Columns>
-
-                                    <DataGridTextColumn Binding="{Binding Name}" Width="*" MinWidth="100"/>
-                                    <DataGridTemplateColumn MaxWidth="20">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <CheckBox IsChecked="{Binding Path=Checked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-
-                            </DataGrid>
+                    SortMemberPath="Production" />
 
 
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
 
 
-                </DataGridTemplateColumn>
-                -->
                 <DataGridTemplateColumn Header="Kto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -676,14 +749,11 @@
 
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
-                    <!--  Zapobiegamy domyślnemu podświetleniu zaznaczenia  -->
+
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="FocusVisualStyle" Value="{x:Null}" />
 
                     <Style.Triggers>
-                        <!--  Ignoruj standardowe podświetlenie przy zaznaczeniu  -->
-
-
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                             <Setter Property="Background" Value="#EEF" />
                         </Trigger>
@@ -716,7 +786,7 @@
 
 
         </DataGrid>
-        <!--</ScrollViewer>-->
+
         <Border
             x:Name="Overlay"
             Grid.Row="1"
