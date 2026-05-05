@@ -184,6 +184,7 @@
 
             <Label Grid.Column="2" Content="Filtruj" />
             <TextBox
+                BorderThickness="1"
                 x:Name="TxtIdFilter"
                 Grid.Column="3"
                 Height="30"
