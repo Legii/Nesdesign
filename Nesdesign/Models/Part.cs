@@ -12,8 +12,9 @@ namespace Nesdesign.Models
         private bool sub = false;
 
         private bool _checked;
+        public int? Quantity { get; set; }
 
-        public Offer Parent { get; set; }
+        public Offer? Parent { get; set; }
 
         public string Name
         {
@@ -24,7 +25,7 @@ namespace Nesdesign.Models
                 {
                     _name = value;
                     OnPropertyChanged();
-                    if(sub)
+                    if(sub && Parent != null)
                         Parent.NewPartsText();
                 }
             }
@@ -40,7 +41,7 @@ namespace Nesdesign.Models
                 {
                     _checked = value;
                     OnPropertyChanged();
-                    if (sub)
+                    if (sub && Parent != null)
                         Parent.NewPartsText();
                 }
             }
@@ -50,6 +51,7 @@ namespace Nesdesign.Models
         protected void OnPropertyChanged([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
+        public Part() { }
         public Part(string name, bool _checked, Offer parent)
         {
             this.Parent = parent;

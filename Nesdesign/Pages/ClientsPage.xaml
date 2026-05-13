@@ -43,7 +43,7 @@
                     <DataGridTextColumn
                         Width="3*"
                         Binding="{Binding Description, Mode=TwoWay}"
-                        Header="Opis" />
+                        Header="Osoba kontaktowa" />
                     <DataGridTextColumn
                         Width="3*"
                         Binding="{Binding Address, Mode=TwoWay}"

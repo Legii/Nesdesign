@@ -30,7 +30,6 @@ namespace Nesdesign.Models
             var clientList = await DatabaseHandler.GetClientsAsync();
             foreach (var client in clientList)
             {
-            
 
                 Clients.Add(client);
                 SubscribeClient(client);
@@ -67,6 +66,11 @@ namespace Nesdesign.Models
             }
         }
 
+
+        public Client FindClientById(int id)
+        {
+            return Clients.FirstOrDefault(c => c.ClientId == id);
+        }
         private void Clients_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
 

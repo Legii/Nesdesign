@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Nesdesign.Models;
+using Nesdesign.Pages.Windows;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -16,6 +17,7 @@ namespace Nesdesign
     public partial class OffersPage : Page, INotifyPropertyChanged
     {
         OffersViewModel viewModel;
+        BillOfConsignmentWindow billWindow;
 
         private void addProject(object sender, RoutedEventArgs e)
         {
@@ -38,7 +40,7 @@ namespace Nesdesign
                     offer.LoadPhoto(openFileDialog.FileName);
                     OffersDataGrid.Items.Refresh();
                 }
-                
+
             }
         }
 
@@ -53,8 +55,9 @@ namespace Nesdesign
             InitializeComponent();
             this.DataContext = offersViewModel;
             this.viewModel = offersViewModel;
-            this.viewModel.PropertyChanged += (_, e) => { 
-                if(e.PropertyName == nameof(OffersViewModel.ShowPaymentData))
+            this.viewModel.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(OffersViewModel.ShowPaymentData))
                 {
                     Visibility visibility = viewModel.ShowPaymentData ? Visibility.Visible : Visibility.Collapsed;
                     InvoiceColumn.Visibility = visibility;
@@ -65,10 +68,10 @@ namespace Nesdesign
 
                 }
             };
-            
+
             WeakReferenceMessenger.Default.Register<RequestDeleteSelectedOfferMessage>(this, (r, m) =>
             {
-          
+
                 OffersDataGrid.CommitEdit(DataGridEditingUnit.Row, true);
                 OffersDataGrid.CancelEdit();
 
@@ -90,7 +93,7 @@ namespace Nesdesign
         {
             if (OffersDataGrid.Items.Count > 0)
             {
-  
+
                 var lastItem = OffersDataGrid.Items[OffersDataGrid.Items.Count - 1];
                 OffersDataGrid.ScrollIntoView(lastItem);
             }
@@ -110,15 +113,15 @@ namespace Nesdesign
 
         private void CreateOrderCLick(object sender, RoutedEventArgs e)
         {
-            
+
             if (sender is Button btn && btn.DataContext is Offer offer)
             {
-            
+
                 Overlay.Visibility = Visibility.Visible;
                 FormPanel.LoadOrder(offer);
                 FormPanel.SetCallback(result => OnFormResult(result));
-               
-                
+
+
             }
         }
         private void RightClick(object sender, RoutedEventArgs e)
@@ -137,7 +140,7 @@ namespace Nesdesign
 
             if (offer == null)
             {
-     
+
                 return;
             }
 
@@ -153,9 +156,9 @@ namespace Nesdesign
                 else
                     MessageBox.Show("wystąpił bląd przy tworzeniu zamówienia");
             }
-            
-            
-   
+
+
+
         }
 
 
@@ -164,11 +167,11 @@ namespace Nesdesign
             if (sender is Button btn && btn.DataContext is Offer offer)
             {
                 string orderPath = offer.OrderPath;
-        
-                
+
+
                 FileHandler.OpenFolder(orderPath, DIR_TYPE.Order);
-       
-               
+
+
             }
         }
 
@@ -217,7 +220,7 @@ namespace Nesdesign
             }
         }
 
-  
+
         private void OffersDataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var dep = (DependencyObject)e.OriginalSource;
@@ -231,7 +234,7 @@ namespace Nesdesign
                 return;
             }
 
- 
+
             if (row.IsSelected)
             {
                 OffersDataGrid.UnselectAll();
@@ -267,6 +270,35 @@ namespace Nesdesign
             return null;
         }
 
-        
+
+        private void CreateBillOfConsignmentClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && viewModel.SelectedItem != null)
+            {
+                if(billWindow == null || !billWindow.IsLoaded)
+                {
+                    int clientid = viewModel.SelectedItem.ClientId ?? -1;
+
+                    Client client_ = MainWindow.Instance.clientsViewModel.FindClientById(clientid);
+                    if (clientid == -1)
+                    {
+                        MessageBox.Show("Brak klienta!");
+                        return;
+                    }
+                    if (viewModel.SelectedItem.projectPath != "")
+                    {
+                        BillOfConsignmentWindow billWindow = new BillOfConsignmentWindow(viewModel.SelectedItem, client_);
+                        billWindow.Show();
+                    } else
+                    {
+                        MessageBox.Show("Brak projektu!");
+                    }
+                }
+                    
+                  
+            }
+
+
+        }
     }
 }

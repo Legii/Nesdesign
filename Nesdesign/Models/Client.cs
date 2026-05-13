@@ -17,6 +17,7 @@ namespace Nesdesign.Models
         [ObservableProperty]
         [Column("NIP")]
         private string _NIP ="";
+        //Osoba kontaktowa, nie opis!
         [ObservableProperty]
         [Column("description")]
         private string? description = "";

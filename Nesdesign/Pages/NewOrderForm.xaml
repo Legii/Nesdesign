@@ -9,6 +9,11 @@
   
 
     <Border Background="White" Padding="20" CornerRadius="8">
+        <Border.Resources>
+            <Style TargetType="TextBox">
+                <Setter Property="BorderThickness" Value="1"/>
+            </Style>
+        </Border.Resources>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"></RowDefinition>

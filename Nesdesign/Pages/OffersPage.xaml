@@ -306,6 +306,7 @@
                     MinWidth="200"
                     Orientation="Horizontal">
                     <StackPanel.Resources>
+
                         <Style TargetType="Button">
                             <Setter Property="Margin" Value="0,0,10,0" />
                             <Setter Property="Padding" Value="5,0" />
@@ -317,24 +318,23 @@
                     </StackPanel.Resources>
 
 
-                    <Button Click="ScrollToTop_Click" VerticalContentAlignment="Center">
-         
-                        <StackPanel Orientation="Horizontal">
+                    <Button VerticalContentAlignment="Center" Click="ScrollToTop_Click">
+                        <StackPanel IsHitTestVisible="False" Orientation="Horizontal">
                             <TextBlock Text="przejdź na początek " />
-                            <TextBlock Text="⤒" FontSize="20"/>
+                            <TextBlock FontSize="20" Text="⤒" />
                         </StackPanel>
                     </Button>
 
-                    <Button Click="ScrollToTop_Click" VerticalContentAlignment="Center">
-                        <StackPanel Orientation="Horizontal">
+                    <Button VerticalContentAlignment="Center" Click="ScrollToBottom_Click">
+                        <StackPanel IsHitTestVisible="False" Orientation="Horizontal">
                             <TextBlock Text="przejdź na koniec " />
-                            <TextBlock Text="⤓" FontSize="20"/>
+                            <TextBlock FontSize="20" Text="⤓" />
                         </StackPanel>
                     </Button>
 
-           
 
-                    <Button>
+
+                    <Button Click="CreateBillOfConsignmentClick">
                         List przewozowy
                     </Button>
 

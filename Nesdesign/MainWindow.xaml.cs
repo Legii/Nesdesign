@@ -10,11 +10,13 @@ namespace Nesdesign
     public partial class MainWindow : Window
 
     {
+        public static  MainWindow Instance { get; set; }
+
         private OffersFilter offersFilter;
         private DatabaseHandler dbHandler { get; } = new DatabaseHandler();
         private SettingsManager settingsManager;
         OffersViewModel offersViewModel { get; set; }
-        ClientsViewModel clientsViewModel { get; set; }
+        public ClientsViewModel clientsViewModel { get; set; }
         ContractorsViewModel contractorsViewModel { get; set; }
         private OffersPage offersPage { get; set; }
     
@@ -36,6 +38,7 @@ namespace Nesdesign
         {
             contractorsViewModel = new ContractorsViewModel();
             settingsManager = new SettingsManager();
+            Instance = this;
 
             
             
