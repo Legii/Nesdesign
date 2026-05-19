@@ -23,6 +23,7 @@ namespace Nesdesign.Pages.Windows
     public partial class BillOfConsignmentWindow : Window
     {
         public BillData BillData_ { get; set; }
+        PdfHandler pdfHandler = new PdfHandler();
         /*
         public  Offer Offer_ { get; set; }
         private Client client_ { get; set; }
@@ -84,7 +85,7 @@ namespace Nesdesign.Pages.Windows
         private void GeneratePdf_Click(object sender, RoutedEventArgs e)
         {
             
-           // PdfHandler.CreatePDF();
+            pdfHandler.CreatePDF(BillData_);
             //MessageBox.Show("Generowanie PDF-a...");
 
         }
